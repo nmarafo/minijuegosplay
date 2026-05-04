@@ -93,15 +93,18 @@ header {
 }
 
 .logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 2rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
+    transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.05);
 }
 
 /* Categories Section */
