@@ -1,0 +1,26 @@
+{
+  "categories": [
+    { "id": "all", "name": "Todos" },
+    { "id": "arcade", "name": "Arcade" },
+    { "id": "puzzle", "name": "Puzzle" },
+    { "id": "action", "name": "Acción" }
+  ],
+  "games": [
+    {
+      "id": "snake",
+      "title": "Neon Snake",
+      "description": "El clásico juego de la serpiente con un toque futurista.",
+      "category": "arcade",
+      "thumbnail": "https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=400&h=250&auto=format&fit=crop",
+      "path": "../minigames/arcade/snake/index.html"
+    },
+    {
+      "id": "memory",
+      "title": "Cyber Memory",
+      "description": "Entrena tu memoria con este desafío de emparejamiento.",
+      "category": "puzzle",
+      "thumbnail": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=400&h=250&auto=format&fit=crop",
+      "path": "../minigames/puzzle/memory/index.html"
+    }
+  ]
+}

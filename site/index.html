@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinijuegosPlay | Tu Portal de Juegos</title>
+    <meta name="description" content="Descubre y juega a los mejores minijuegos arcade, puzzle y acción en MinijuegosPlay.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo" id="mainLogo">MinijuegosPlay</div>
+        </header>
+
+        <section class="hero" style="margin-bottom: 4rem; text-align: center; padding-top: 2rem;">
+            <h1 style="font-size: 3.5rem; margin-bottom: 1rem; font-weight: 800;">JUEGA SIN LÍMITES</h1>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                Una colección curada de minijuegos para desafiar tus habilidades. Arcade, puzzles y más.
+            </p>
+        </section>
+
+        <nav class="categories" id="categoriesContainer">
+            <!-- Dynamic Categories -->
+        </nav>
+
+        <main class="games-grid" id="gamesGrid">
+            <!-- Dynamic Games -->
+        </main>
+    </div>
+
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <iframe id="gameIframe" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
