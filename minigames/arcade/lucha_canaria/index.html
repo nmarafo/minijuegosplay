@@ -46,6 +46,7 @@
         });
 
         let scrollX = 0;
+        let frameTick = 0;
 
         function draw() {
             ctx.save();
@@ -58,44 +59,58 @@
             
             if (imagesLoaded < totalImages) {
                 ctx.fillStyle = '#fff';
-                ctx.fillText(`Cargando... ${imagesLoaded}/${totalImages}`, 20, 580);
+                ctx.font = '20px sans-serif';
+                ctx.fillText(`Cargando Arena... ${imagesLoaded}/${totalImages}`, 300, 300);
                 requestAnimationFrame(draw);
                 return;
             }
 
-            // 1. Dibujar Paralaje
+            // 1. Dibujar Paralaje (Velocidades según parallax_report.md)
+            // Capa 4: Cielo (0.05x) - Alineación Top
             ctx.drawImage(images.p4, 0, 0, canvas.width, canvas.height);
-            ctx.drawImage(images.p3, (scrollX * 0.3) % canvas.width, 0, canvas.width, canvas.height);
-            ctx.drawImage(images.p3, ((scrollX * 0.3) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
-            
-            ctx.drawImage(images.p2, (scrollX * 0.7) % canvas.width, 0, canvas.width, canvas.height);
-            ctx.drawImage(images.p2, ((scrollX * 0.7) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
 
-            // 2. Dibujar Terrero (Fondo de arena del tileset)
+            // Capa 3: Palmeras/Casas (0.25x) - Alineación Base
+            const p3X = (scrollX * 0.25) % canvas.width;
+            ctx.drawImage(images.p3, p3X, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p3, p3X + canvas.width, 0, canvas.width, canvas.height);
+            
+            // Capa 2: Gradas/Público (0.60x) - Alineación Base
+            const p2X = (scrollX * 0.60) % canvas.width;
+            ctx.drawImage(images.p2, p2X, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p2, p2X + canvas.width, 0, canvas.width, canvas.height);
+
+            // 2. Dibujar Terrero (Fila 1, Col 1 según tileset_metadata.md)
+            // Arena base
             ctx.drawImage(images.terrero, 0, 0, 256, 256, 0, 0, canvas.width, canvas.height);
 
-            // Círculo del terrero
-            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            // Círculo del terrero (Lógica visual)
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
             ctx.lineWidth = 15;
             ctx.beginPath();
-            ctx.arc(400, 300, 260, 0, Math.PI*2);
+            ctx.arc(400, 320, 260, 0, Math.PI*2);
             ctx.stroke();
 
-            // 3. Dibujar Luchadores
-            // Protagonista
-            ctx.drawImage(images.luchador, 0, 0, 256, 256, 250, 200, 200, 200);
+            // 3. Dibujar Luchadores (Animación basada en 256px de animations_guide.md)
+            const currentFrame = Math.floor(frameTick / 10) % 4;
+            const sx = currentFrame * 256;
+            const sy = 0; // Fila 1: Idle
+
+            // Protagonista (Anclaje base en Y=450 aprox)
+            ctx.drawImage(images.luchador, sx, sy, 256, 256, 220, 250, 256, 256);
             
-            // Oponente
+            // Oponente (Espejo)
             ctx.save();
             ctx.scale(-1, 1);
-            ctx.drawImage(images.luchador, 0, 0, 256, 256, -550, 200, 200, 200);
+            ctx.drawImage(images.luchador, sx, sy, 256, 256, -580, 250, 256, 256);
             ctx.restore();
 
-            // 4. Detalle frontal de paralaje
-            ctx.drawImage(images.p1, (scrollX * 1.0) % canvas.width, 0, canvas.width, canvas.height);
-            ctx.drawImage(images.p1, ((scrollX * 1.0) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
+            // 4. Detalle frontal (1.00x según parallax_report.md)
+            const p1X = (scrollX * 1.00) % canvas.width;
+            ctx.drawImage(images.p1, p1X, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p1, p1X + canvas.width, 0, canvas.width, canvas.height);
 
-            scrollX -= 0.5; // Movimiento automático suave
+            scrollX -= 0.5;
+            frameTick++;
             ctx.restore();
         }
 
