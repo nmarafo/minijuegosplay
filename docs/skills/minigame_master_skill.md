@@ -36,6 +36,11 @@ Antes de comenzar, debes solicitar al usuario:
 ### 3. Fase de Diseño (Game Design Document)
 Invoca y supervisa el skill `docs/skills/game_designer_skill.md`.
 - El objetivo es generar el GDD y el guion técnico.
+- **Supervisión de Diseño**: Revisa el GDD generado para asegurarte de que se ajusta estrictamente a las reglas del `game_designer_skill.md`. Debe contener sin excepción:
+    1. El Guion y Curva Emocional con sus 6 fases exactas.
+    2. Los parámetros estéticos y técnicos detallados por fase.
+    3. Un listado exhaustivo de assets a generar (Tilesets, Sprites, UI/VFX).
+    Si el GDD carece de estos elementos, exige su corrección antes de avanzar.
 - Asegúrate de que el documento se guarde en la carpeta del minijuego.
 
 ### 4. Generación de Spritesheets
