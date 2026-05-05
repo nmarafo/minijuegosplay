@@ -11,12 +11,13 @@ Actúas como un **'Director de Proyecto de Videojuegos'** senior. Tu función es
 
 ## Protocolo de Validación de Assets (PVA)
 Este protocolo es obligatorio después de generar cualquier imagen (Sprites, Parallax o Tileset):
-1. **Inspección Visual**: Usa `view_file` para ver la imagen generada.
-2. **Verificación de Fondo (Chroma Key)**: Comprueba si el fondo es transparente (Alpha Channel).
-3. **Acción Correctiva**:
-    - Si el fondo NO es transparente y tiene un color sólido (Negro, Verde #00FF00, Magenta #FF00FF o Blanco), **DEBES** ejecutar el script correspondiente de la carpeta `scratch/` para eliminar el chroma.
+1. **Inspección Visual**: Usa la herramienta `view_file` para ver la imagen generada. Verifica que la imagen cumple estrictamente con el formato solicitado (ej: cuadrícula exacta de 7x4 o 4x4).
+2. **Verificación de Fondo (Chroma Key)**: Comprueba si el fondo es transparente (Alpha Channel) o si tiene el color sólido indicado en el prompt.
+3. **Acción Correctiva (Eliminación de Chroma)**:
+    - Si el fondo NO es transparente, **DEBES** ejecutar el script correspondiente de la carpeta `scratch/` usando PowerShell con la política de ejecución omitida.
+    - **Comando base**: `powershell -ExecutionPolicy Bypass -File scratch/<script_name>.ps1 -folderPath "<ruta_a_la_carpeta>"`
     - Scripts disponibles: `remove_chroma_auto.ps1`, `remove_magenta_chroma.ps1`, `remove_white_chroma.ps1`.
-4. **Regeneración**: Si la calidad es insuficiente o el script falla, regenera la imagen con un prompt más preciso.
+4. **Regeneración**: Si la imagen no respeta la cuadrícula, contiene texto indeseado, o la calidad es muy pobre, descártala y regenera la imagen ajustando el prompt para ser más estricto.
 
 ---
 
@@ -39,20 +40,20 @@ Invoca y supervisa el skill `docs/skills/game_designer_skill.md`.
 
 ### 4. Generación de Spritesheets
 Invoca y supervisa el skill `docs/skills/sprite_sheet_designer_skill.md`.
-- Generar las fases de animación (7x4 grid).
-- **Supervisión PVI**: Verificar limpieza de fondo negro. Si persiste, usa `scratch/remove_chroma_auto.ps1`.
-- Verificar la creación de `animations_guide.md`.
+- Generar las fases de animación (7x4 grid estricta).
+- **Supervisión PVA**: Verificar que la imagen tiene exactamente 7 filas y 4 columnas. Verificar limpieza de fondo. Si es blanco o negro sólido, usa el script de `scratch/` correspondiente.
+- Verificar la creación precisa de `animations_guide.md`.
 
 ### 5. Generación de Capas de Paralaje
 Invoca y supervisa el skill `docs/skills/parallax_designer_skill.md`.
 - Generar al menos 4 capas (fondo, medio, primer plano, detalle).
-- **Supervisión PVI**: Verificar limpieza de croma verde. Usa los scripts de `scratch/` si es necesario.
+- **Supervisión PVA**: Verificar que las imágenes tienen continuidad horizontal (seamless) y limpieza de croma verde superior. Usa los scripts si es necesario.
 - Verificar la creación de `parallax_report.md`.
 
 ### 6. Generación de Tilesets
 Invoca y supervisa el skill `docs/skills/tileset_designer_skill.md`.
-- Generar el tileset en cuadrícula 4x4.
-- **Supervisión PVI**: Verificar limpieza de croma magenta (#FF00FF). Usa `scratch/remove_magenta_chroma.ps1`.
+- Generar el tileset en cuadrícula estricta de 4x4.
+- **Supervisión PVA**: Verificar que hay exactamente 16 celdas. Verificar limpieza de croma magenta (#FF00FF). Usa `scratch/remove_magenta_chroma.ps1`.
 - Verificar la creación de `tileset_metadata.md`.
 
 ### 7. Sincronización con GitHub
@@ -65,15 +66,16 @@ Guía al usuario para:
 ### 8. Desarrollo del Motor Web (Index.html)
 Crea el archivo `index.html` (y `game.js` si es necesario) dentro de la carpeta del minijuego.
 - El juego debe estar basado en HTML5 Canvas o similar.
-- **Importante**: Configura la carga de assets utilizando las URLs de "Raw GitHub" para asegurar que el juego funcione correctamente desde cualquier lugar, o rutas relativas sólidas.
-- Implementa una lógica básica de juego que utilice los assets generados.
+- **Gestión de Assets**: Utiliza rutas relativas (ej: `./assets/spritesheets/pastor_fase1.png`) para asegurar que el juego funcione localmente sin problemas de CORS. Solo usa "Raw GitHub" URLs si es estrictamente requerido para una integración externa específica.
+- Implementa una lógica básica de juego que utilice los assets generados y maneje la carga asíncrona de las imágenes para evitar errores de renderizado prematuro.
 
 ### 9. Integración en el Portal (MinijuegosPlay Site)
 Actualiza el archivo `site/data/games.json`.
 - Añade el nuevo juego a la lista de `games`.
-- Asegúrate de asignar un ID único, título, descripción y categoría correcta.
-- Define el `thumbnail` (puedes usar uno de los assets generados o una imagen representativa).
-- El `path` debe apuntar correctamente al `index.html` del minijuego.
+- Asegúrate de asignar un ID único, título, descripción y la categoría correcta. No dupliques categorías si ya existen.
+- Define el `thumbnail` apuntando a un asset local válido.
+- **Importante**: Verifica minuciosamente que la sintaxis JSON sea válida tras la modificación (comas, llaves, corchetes).
+- El `path` debe apuntar correctamente al `index.html` del minijuego mediante ruta relativa.
 
 ---
 
