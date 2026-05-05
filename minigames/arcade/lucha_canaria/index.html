@@ -23,11 +23,15 @@
         let health = 100;
         let shake = 0;
 
-        // Assets (Rutas relativas segun Master Skill)
-        const assets = {
-            pastor: './assets/spritesheets/luchador_fase1.png',
-            terrero: './assets/tilesets/tileset_lucha.png'
-        };
+        // Carga de Assets
+        const imgLuchador = new Image();
+        imgLuchador.src = './assets/spritesheets/luchador_fase1.png';
+        const imgTerrero = new Image();
+        imgTerrero.src = './assets/tilesets/tileset_lucha.png';
+
+        let imagesLoaded = 0;
+        const totalImages = 2;
+        imgLuchador.onload = imgTerrero.onload = () => { imagesLoaded++; };
 
         function draw() {
             ctx.save();
@@ -38,22 +42,35 @@
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Dibujar Terrero (Placeholder circular)
-            ctx.fillStyle = '#d2b48c';
+            // 1. Dibujar Terrero (Fondo)
+            if (imagesLoaded >= 1) {
+                // Dibujamos una celda del tileset como fondo de arena (suponiendo celda 0,0)
+                // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+                ctx.drawImage(imgTerrero, 0, 0, 256, 256, 0, 0, canvas.width, canvas.height);
+            }
+
+            // Círculo del terrero
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            ctx.lineWidth = 15;
             ctx.beginPath();
-            ctx.arc(400, 300, 250, 0, Math.PI*2);
-            ctx.fill();
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 10;
+            ctx.arc(400, 300, 260, 0, Math.PI*2);
             ctx.stroke();
 
-            // Dibujar Luchadores (Placeholders)
-            // Protagonista
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(320, 250, 60, 100);
-            // Oponente
-            ctx.fillStyle = '#4CAF50';
-            ctx.fillRect(420, 250, 60, 100);
+            // 2. Dibujar Luchadores (Sprites)
+            if (imagesLoaded >= 2) {
+                // Protagonista (Fila 1: Idle, Frame 1)
+                ctx.drawImage(imgLuchador, 0, 0, 256, 256, 250, 200, 200, 200);
+                
+                // Oponente (Espejo o mismo sprite por ahora)
+                ctx.save();
+                ctx.scale(-1, 1);
+                ctx.drawImage(imgLuchador, 0, 0, 256, 256, -550, 200, 200, 200);
+                ctx.restore();
+            } else {
+                // Fallback si no cargan
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(320, 250, 60, 100);
+            }
 
             ctx.restore();
         }
@@ -67,7 +84,6 @@
         window.addEventListener('keydown', (e) => {
             if(e.key.toLowerCase() === 'z') {
                 shake = 10;
-                console.log("Maña!");
             }
             if(e.key.toLowerCase() === 'x') {
                 health -= 5;
