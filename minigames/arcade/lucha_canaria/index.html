@@ -26,14 +26,26 @@
         // Carga de Assets (GitHub Raw URLs)
         const GITHUB_BASE = 'https://github.com/nmarafo/minijuegosplay/blob/main/minigames/arcade/lucha_canaria/assets/';
         
-        const imgLuchador = new Image();
-        imgLuchador.src = GITHUB_BASE + 'spritesheets/luchador_fase1.png?raw=true';
-        const imgTerrero = new Image();
-        imgTerrero.src = GITHUB_BASE + 'tilesets/tileset_lucha.png?raw=true';
+        const assets = {
+            luchador: GITHUB_BASE + 'spritesheets/luchador_fase1.png?raw=true',
+            terrero: GITHUB_BASE + 'tilesets/tileset_lucha.png?raw=true',
+            p4: GITHUB_BASE + 'parallax/layer4_far.png?raw=true',
+            p3: GITHUB_BASE + 'parallax/layer3_mid.png?raw=true',
+            p2: GITHUB_BASE + 'parallax/layer2_foreground.png?raw=true',
+            p1: GITHUB_BASE + 'parallax/layer1_detail.png?raw=true'
+        };
 
+        const images = {};
         let imagesLoaded = 0;
-        const totalImages = 2;
-        imgLuchador.onload = imgTerrero.onload = () => { imagesLoaded++; };
+        const totalImages = Object.keys(assets).length;
+
+        Object.keys(assets).forEach(key => {
+            images[key] = new Image();
+            images[key].src = assets[key];
+            images[key].onload = () => { imagesLoaded++; };
+        });
+
+        let scrollX = 0;
 
         function draw() {
             ctx.save();
@@ -44,12 +56,23 @@
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // 1. Dibujar Terrero (Fondo)
-            if (imagesLoaded >= 1) {
-                // Dibujamos una celda del tileset como fondo de arena (suponiendo celda 0,0)
-                // ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-                ctx.drawImage(imgTerrero, 0, 0, 256, 256, 0, 0, canvas.width, canvas.height);
+            if (imagesLoaded < totalImages) {
+                ctx.fillStyle = '#fff';
+                ctx.fillText(`Cargando... ${imagesLoaded}/${totalImages}`, 20, 580);
+                requestAnimationFrame(draw);
+                return;
             }
+
+            // 1. Dibujar Paralaje
+            ctx.drawImage(images.p4, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p3, (scrollX * 0.3) % canvas.width, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p3, ((scrollX * 0.3) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
+            
+            ctx.drawImage(images.p2, (scrollX * 0.7) % canvas.width, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p2, ((scrollX * 0.7) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
+
+            // 2. Dibujar Terrero (Fondo de arena del tileset)
+            ctx.drawImage(images.terrero, 0, 0, 256, 256, 0, 0, canvas.width, canvas.height);
 
             // Círculo del terrero
             ctx.strokeStyle = 'rgba(255,255,255,0.5)';
@@ -58,22 +81,21 @@
             ctx.arc(400, 300, 260, 0, Math.PI*2);
             ctx.stroke();
 
-            // 2. Dibujar Luchadores (Sprites)
-            if (imagesLoaded >= 2) {
-                // Protagonista (Fila 1: Idle, Frame 1)
-                ctx.drawImage(imgLuchador, 0, 0, 256, 256, 250, 200, 200, 200);
-                
-                // Oponente (Espejo o mismo sprite por ahora)
-                ctx.save();
-                ctx.scale(-1, 1);
-                ctx.drawImage(imgLuchador, 0, 0, 256, 256, -550, 200, 200, 200);
-                ctx.restore();
-            } else {
-                // Fallback si no cargan
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(320, 250, 60, 100);
-            }
+            // 3. Dibujar Luchadores
+            // Protagonista
+            ctx.drawImage(images.luchador, 0, 0, 256, 256, 250, 200, 200, 200);
+            
+            // Oponente
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(images.luchador, 0, 0, 256, 256, -550, 200, 200, 200);
+            ctx.restore();
 
+            // 4. Detalle frontal de paralaje
+            ctx.drawImage(images.p1, (scrollX * 1.0) % canvas.width, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p1, ((scrollX * 1.0) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
+
+            scrollX -= 0.5; // Movimiento automático suave
             ctx.restore();
         }
 
