@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gofio Dash: El Molino de Viento</title>
+    <style>
+        body { margin: 0; background: #332211; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        canvas { background: #554433; border: 8px solid #8B4513; border-radius: 10px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .ui { position: absolute; top: 20px; display: flex; gap: 40px; font-size: 28px; text-shadow: 2px 2px #000; font-weight: bold; }
+        .controls { margin-top: 15px; color: #d2b48c; font-style: italic; }
+        .health-bar { width: 200px; height: 20px; background: #333; border: 2px solid #fff; position: relative; }
+        .health-fill { width: 100%; height: 100%; background: #4CAF50; transition: width 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="ui">
+        <div>Gofio: <span id="score">0</span></div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            Sacos: <div class="health-bar"><div id="health" class="health-fill"></div></div>
+        </div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="controls">PULSA 'ESPACIO' PARA SALTAR | 'FLECHA ABAJO' PARA DESLIZAR</div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const healthFill = document.getElementById('health');
+
+        const GITHUB_BASE = 'https://github.com/nmarafo/minijuegosplay/blob/main/minigames/arcade/gofio_dash/assets/';
+        
+        const assets = {
+            hero: GITHUB_BASE + 'spritesheets/molinero_fase1.png?raw=true',
+            tiles: GITHUB_BASE + 'tilesets/tileset_gofio.png?raw=true',
+            p4: GITHUB_BASE + 'parallax/layer4_far.png?raw=true',
+            p3: GITHUB_BASE + 'parallax/layer3_mid.png?raw=true',
+            p2: GITHUB_BASE + 'parallax/layer2_foreground.png?raw=true',
+            p1: GITHUB_BASE + 'parallax/layer1_detail.png?raw=true'
+        };
+
+        const images = {};
+        let loaded = 0;
+        const total = Object.keys(assets).length;
+
+        Object.keys(assets).forEach(key => {
+            images[key] = new Image();
+            images[key].src = assets[key];
+            images[key].onload = () => { loaded++; };
+        });
+
+        let score = 0;
+        let health = 100;
+        let scrollX = 0;
+        let frameTick = 0;
+        let shake = 0;
+
+        function draw() {
+            ctx.save();
+            if(shake > 0) {
+                ctx.translate(Math.random()*shake-shake/2, Math.random()*shake-shake/2);
+                shake *= 0.9;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (loaded < total) {
+                ctx.fillStyle = '#fff';
+                ctx.font = '24px sans-serif';
+                ctx.fillText(`Moliendo Grano... ${Math.floor((loaded/total)*100)}%`, 300, 300);
+                requestAnimationFrame(draw);
+                return;
+            }
+
+            // 1. Paralaje (Velocidades según parallax_report.md)
+            ctx.drawImage(images.p4, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p3, (scrollX * 0.2) % canvas.width, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p3, ((scrollX * 0.2) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
+            
+            ctx.drawImage(images.p2, (scrollX * 0.5) % canvas.width, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p2, ((scrollX * 0.5) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
+
+            // 2. Plataforma (Tileset Arena/Madera)
+            for(let i=0; i<5; i++) {
+                ctx.drawImage(images.tiles, 0, 0, 256, 256, (i*256 + (scrollX % 256)), 450, 256, 256);
+            }
+
+            // 3. Molinero (Animación según animations_guide.md)
+            const frame = Math.floor(frameTick / 8) % 4;
+            // Fila 3: Run (Inicio Y = 512)
+            ctx.drawImage(images.hero, frame * 256, 512, 256, 256, 100, 280, 256, 256);
+
+            // 4. Detalle Frontal (1.0x)
+            ctx.drawImage(images.p1, (scrollX * 1.0) % canvas.width, 0, canvas.width, canvas.height);
+            ctx.drawImage(images.p1, ((scrollX * 1.0) % canvas.width) + canvas.width, 0, canvas.width, canvas.height);
+
+            scrollX -= 2;
+            frameTick++;
+            ctx.restore();
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if(e.code === 'Space') {
+                score += 10;
+                scoreEl.innerText = score;
+                shake = 5;
+            }
+            if(e.code === 'ArrowDown') {
+                health -= 5;
+                if(health < 0) health = 0;
+                healthFill.style.width = health + '%';
+            }
+        });
+
+        draw();
+    </script>
+</body>
+</html>
