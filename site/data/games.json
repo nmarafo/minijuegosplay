@@ -21,14 +21,6 @@
       "category": "puzzle",
       "thumbnail": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=400&h=250&auto=format&fit=crop",
       "path": "../minigames/puzzle/memory/index.html"
-    },
-    {
-      "id": "dia_canarias",
-      "title": "El Salto del Pastor",
-      "description": "¡Celebra el Día de Canarias saltando por los riscos con tu garrote!",
-      "category": "arcade",
-      "thumbnail": "assets/dia_canarias_thumb.png",
-      "path": "../minigames/arcade/dia_canarias/index.html"
     }
   ]
 }
