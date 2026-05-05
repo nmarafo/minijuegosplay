@@ -23,11 +23,13 @@
         let health = 100;
         let shake = 0;
 
-        // Carga de Assets
+        // Carga de Assets (GitHub Raw URLs)
+        const GITHUB_BASE = 'https://github.com/nmarafo/minijuegosplay/blob/main/minigames/arcade/lucha_canaria/assets/';
+        
         const imgLuchador = new Image();
-        imgLuchador.src = './assets/spritesheets/luchador_fase1.png';
+        imgLuchador.src = GITHUB_BASE + 'spritesheets/luchador_fase1.png?raw=true';
         const imgTerrero = new Image();
-        imgTerrero.src = './assets/tilesets/tileset_lucha.png';
+        imgTerrero.src = GITHUB_BASE + 'tilesets/tileset_lucha.png?raw=true';
 
         let imagesLoaded = 0;
         const totalImages = 2;

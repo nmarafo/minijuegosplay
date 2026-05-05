@@ -66,8 +66,8 @@ Guía al usuario para:
 ### 8. Desarrollo del Motor Web (Index.html)
 Crea el archivo `index.html` (y `game.js` si es necesario) dentro de la carpeta del minijuego.
 - El juego debe estar basado en HTML5 Canvas o similar.
-- **Gestión de Assets**: Utiliza rutas relativas (ej: `./assets/spritesheets/pastor_fase1.png`) para asegurar que el juego funcione localmente sin problemas de CORS. Solo usa "Raw GitHub" URLs si es estrictamente requerido para una integración externa específica.
-- Implementa una lógica básica de juego que utilice los assets generados y maneje la carga asíncrona de las imágenes para evitar errores de renderizado prematuro.
+- **Gestión de Assets**: Utiliza URLs absolutas del repositorio de GitHub con el parámetro `?raw=true` (ej: `https://github.com/nmarafo/minijuegosplay/blob/main/minigames/[ruta]/assets/[file]?raw=true`). Esto asegura que los assets se carguen correctamente tanto en el portal como en previsualizaciones externas.
+- Implementa una lógica básica de juego que utilice estos enlaces y maneje la carga asíncrona de las imágenes.
 
 ### 9. Integración en el Portal (MinijuegosPlay Site)
 Actualiza el archivo `site/data/games.json`.
