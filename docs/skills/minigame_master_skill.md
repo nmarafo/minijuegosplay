@@ -77,8 +77,13 @@ Guía al usuario para:
 ### 8. Desarrollo del Motor Web (Index.html)
 Crea el archivo `index.html` (y `game.js` si es necesario) dentro de la carpeta del minijuego.
 - El juego debe estar basado en HTML5 Canvas o similar.
-- **Gestión de Assets**: Utiliza URLs absolutas del repositorio de GitHub con el parámetro `?raw=true` (ej: `https://github.com/nmarafo/minijuegosplay/blob/main/minigames/[ruta]/assets/[file]?raw=true`). Esto asegura que los assets se carguen correctamente tanto en el portal como en previsualizaciones externas.
-- Implementa una lógica básica de juego que utilice estos enlaces y maneje la carga asíncrona de las imágenes.
+- **Desarrollo basado en Metadatos**: Es **OBLIGATORIO** leer y aplicar las especificaciones de `animations_guide.md`, `parallax_report.md` y `tileset_metadata.md` durante la codificación.
+- **Implementación Técnica**:
+    - Usa las velocidades de scroll exactas del `parallax_report.md`.
+    - Usa las dimensiones de frame y el mapeo de acciones de `animations_guide.md`.
+    - Usa la matriz de celdas y las sugerencias de colisión de `tileset_metadata.md`.
+- **Gestión de Assets**: Utiliza URLs absolutas del repositorio de GitHub con el parámetro `?raw=true` para asegurar la carga.
+- Implementa una lógica básica de juego que sea coherente con el GDD y los metadatos técnicos.
 
 ### 9. Integración en el Portal (MinijuegosPlay Site)
 Actualiza el archivo `site/data/games.json`.
