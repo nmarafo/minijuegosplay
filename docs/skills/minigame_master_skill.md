@@ -42,19 +42,30 @@ Invoca y supervisa el skill `docs/skills/game_designer_skill.md`.
 Invoca y supervisa el skill `docs/skills/sprite_sheet_designer_skill.md`.
 - Generar las fases de animación (7x4 grid estricta).
 - **Supervisión PVA**: Verificar que la imagen tiene exactamente 7 filas y 4 columnas. Verificar limpieza de fondo. Si es blanco o negro sólido, usa el script de `scratch/` correspondiente.
-- Verificar la creación precisa de `animations_guide.md`.
+- **Verificar la creación precisa de `animations_guide.md`**, que debe incluir:
+    - Tabla de mapeo: Fila, Acción, Número de frames (estándar 4).
+    - Especificaciones técnicas: Tamaño de cada frame (ej: 256x256px), padding y márgenes si existen.
+    - Guía de implementación: Instrucciones para el motor sobre cómo recortar el spritesheet.
 
 ### 5. Generación de Capas de Paralaje
 Invoca y supervisa el skill `docs/skills/parallax_designer_skill.md`.
 - Generar al menos 4 capas (fondo, medio, primer plano, detalle).
 - **Supervisión PVA**: Verificar que las imágenes tienen continuidad horizontal (seamless) y limpieza de croma verde superior. Usa los scripts si es necesario.
-- Verificar la creación de `parallax_report.md`.
+- **Verificar la creación de `parallax_report.md`**, que debe incluir:
+    - Tabla de capas: Contenido detallado, Prioridad (Capa 1 es la más cercana).
+    - Parámetros de velocidad: Multiplicador sugerido (ej: 0.1x a 1.0x).
+    - Guía de alineación: Instrucciones sobre si la capa se alinea al fondo (cielo) o a la base (suelo/detalles).
+    - Notas sobre continuidad (Seamless): Confirmación de que el scroll lateral es infinito.
 
 ### 6. Generación de Tilesets
 Invoca y supervisa el skill `docs/skills/tileset_designer_skill.md`.
 - Generar el tileset en cuadrícula estricta de 4x4.
 - **Supervisión PVA**: Verificar que hay exactamente 16 celdas. Verificar limpieza de croma magenta (#FF00FF). Usa `scratch/remove_magenta_chroma.ps1`.
-- Verificar la creación de `tileset_metadata.md`.
+- **Verificar la creación de `tileset_metadata.md`**, que debe incluir:
+    - Tabla 4x4 (Matriz): Descripción exacta del contenido en cada celda (Fila, Columna).
+    - Dimensiones Base: Resolución total del tileset y tamaño exacto de cada celda individual.
+    - Áreas Multicela: Definición clara de objetos que ocupan más de una celda (ej: "Torre: Fila 1-2, Col 1").
+    - Sugerencias de Colisión: Clasificación de celdas en "Transitable" (suelo) o "Obstáculo" (muros/objetos sólidos).
 
 ### 7. Sincronización con GitHub
 Guía al usuario para:
