@@ -21,6 +21,14 @@
       "category": "puzzle",
       "thumbnail": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=400&h=250&auto=format&fit=crop",
       "path": "../minigames/puzzle/memory/index.html"
+    },
+    {
+      "id": "lucha_canaria",
+      "title": "Lucha Canaria: Desafío de Puntales",
+      "description": "Domina las mañas y derriba a tu oponente en el terrero tradicional.",
+      "category": "arcade",
+      "thumbnail": "assets/lucha_thumb.png",
+      "path": "../minigames/arcade/lucha_canaria/index.html"
     }
   ]
 }

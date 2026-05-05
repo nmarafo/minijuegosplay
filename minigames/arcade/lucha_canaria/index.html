@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lucha Canaria: Desafío de Puntales</title>
+    <style>
+        body { margin: 0; background: #222; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        canvas { background: #e9d1a3; border: 5px solid #fff; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .ui { position: absolute; top: 20px; font-size: 24px; text-shadow: 2px 2px #000; }
+        .controls { margin-top: 10px; color: #aaa; }
+    </style>
+</head>
+<body>
+    <div class="ui">Equilibrio: <span id="health">100</span>%</div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="controls">Pulsa 'Z' para Maña | 'X' para Empujar</div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const healthEl = document.getElementById('health');
+
+        let health = 100;
+        let shake = 0;
+
+        // Assets (Rutas relativas segun Master Skill)
+        const assets = {
+            pastor: './assets/spritesheets/luchador_fase1.png',
+            terrero: './assets/tilesets/tileset_lucha.png'
+        };
+
+        function draw() {
+            ctx.save();
+            if(shake > 0) {
+                ctx.translate(Math.random()*shake - shake/2, Math.random()*shake - shake/2);
+                shake *= 0.9;
+            }
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar Terrero (Placeholder circular)
+            ctx.fillStyle = '#d2b48c';
+            ctx.beginPath();
+            ctx.arc(400, 300, 250, 0, Math.PI*2);
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 10;
+            ctx.stroke();
+
+            // Dibujar Luchadores (Placeholders)
+            // Protagonista
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(320, 250, 60, 100);
+            // Oponente
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(420, 250, 60, 100);
+
+            ctx.restore();
+        }
+
+        function update() {
+            if(health <= 0) return;
+            draw();
+            requestAnimationFrame(update);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if(e.key.toLowerCase() === 'z') {
+                shake = 10;
+                console.log("Maña!");
+            }
+            if(e.key.toLowerCase() === 'x') {
+                health -= 5;
+                healthEl.innerText = health;
+                if(health <= 0) alert("¡Caída! El oponente gana esta luchada.");
+            }
+        });
+
+        update();
+    </script>
+</body>
+</html>
