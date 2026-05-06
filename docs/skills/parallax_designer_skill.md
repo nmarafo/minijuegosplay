@@ -24,10 +24,13 @@ Una vez recibida la información, genera una propuesta detallada dividida en al 
 *   **Capa 1: Capa de detalle** (Elementos más cercanos al jugador, mayor contraste).
 
 **Reglas de Diseño:**
-*   **Chroma Key**: Instruye al usuario sobre la ubicación estratégica del color de 'chroma key' (ej. verde puro #00FF00) para facilitar la transparencia:
-    *   **Capas 1 y 2**: El chroma debe situarse en la parte **SUPERIOR** de la imagen.
-    *   **Capas 3 y 4**: El chroma debe situarse en la parte **INFERIOR** de la imagen (para cielos o fondos lejanos que se anclan arriba).
-*   **Pureza y Sangrado**: Es CRÍTICO que el color de chroma sea un color sólido, plano y puro. Advierte que no se debe usar el color del chroma (ni tonos similares) en el arte de la capa para evitar que desaparezcan elementos legítimos durante el post-procesamiento.
+*   **Chroma Key**: Instruye al usuario sobre la ubicación del color de 'chroma key' (ej. verde puro #00FF00) para facilitar la transparencia:
+    *   **Capa 4**: **SIN CHROMA**. Es la capa base (cielo/fondo absoluto) y debe ocupar el 100% de la imagen.
+    *   **Capas 1, 2 y 3**: El chroma debe situarse en la parte **SUPERIOR** de la imagen.
+*   **Pureza y Bordes Definidos (CRÍTICO)**: Para evitar que el post-procesamiento elimine colores legítimos del arte:
+    *   El color de chroma debe ser **100% sólido y plano**, sin degradados ni texturas.
+    *   **Sharp Edges**: Instruye al modelo para que **NO** aplique anti-aliasing ni suavizado en los bordes donde el arte toca el chroma. Los bordes deben ser "pixel-perfect" y cortantes.
+    *   Si el arte contiene el color del chroma (ej. palmeras verdes con chroma verde), **DEBES** cambiar el color del chroma a uno de alto contraste como **Magenta Puro (#FF00FF)**.
 *   **Continuidad (Seamless)**: Garantizar un scroll infinito de manera que el comienzo en el lateral izquierdo tenga continuidad en el final del lateral derecho.
 
 ### 3. Recomendaciones Técnicas
@@ -50,7 +53,7 @@ Para mantener la organización del repositorio, el diseñador debe:
     *   `layer3_mid.png`
     *   `layer2_foreground.png`
     *   `layer1_detail.png`
-5.  **Informe Técnico**: Generar un archivo `parallax_report.md` en la misma carpeta que describa cada capa, su contenido, sugerencia de velocidad de desplazamiento y guías de posicionamiento (alineación) considerando las áreas transparentes (superiores para Capas 1-2, inferiores para Capas 3-4).
+5.  **Informe Técnico**: Generar un archivo `parallax_report.md` en la misma carpeta que describa cada capa, su contenido, sugerencia de velocidad de desplazamiento y guías de posicionamiento (alineación) considerando las áreas transparentes (superiores para Capas 1-3, ninguna para Capa 4).
 
 ## Tono General
 *   Profesional, creativo y altamente técnico.
