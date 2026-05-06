@@ -18,6 +18,7 @@ Este protocolo es obligatorio después de generar cualquier imagen (Sprites, Par
     - **Comando base**: `powershell -ExecutionPolicy Bypass -File scratch/<script_name>.ps1 -folderPath "<ruta_a_la_carpeta>"`
     - Scripts disponibles: `remove_chroma_auto.ps1`, `remove_magenta_chroma.ps1`, `remove_white_chroma.ps1`.
 4. **Regeneración**: Si la imagen no respeta la cuadrícula, contiene texto indeseado, o la calidad es muy pobre, descártala y regenera la imagen ajustando el prompt para ser más estricto.
+5. **Validación del Usuario**: Al finalizar la generación y el post-procesamiento de cada asset, **DEBES** mostrar el resultado al usuario y preguntar explícitamente: *"¿Es correcto este resultado o prefieres que lo rehaga?"*. No procedas al siguiente paso del flujo de trabajo sin su confirmación positiva.
 
 ---
 
@@ -41,6 +42,7 @@ Invoca y supervisa el skill `docs/skills/game_designer_skill.md`.
     2. Los parámetros estéticos y técnicos detallados por fase.
     3. Un listado exhaustivo de assets a generar (Tilesets, Sprites, UI/VFX).
     Si el GDD carece de estos elementos, exige su corrección antes de avanzar.
+- **Validación del Usuario**: Presenta el GDD al usuario y espera su aprobación antes de iniciar la generación de assets.
 - Asegúrate de que el documento se guarde en la carpeta del minijuego.
 
 ### 4. Generación de Spritesheets
@@ -51,6 +53,7 @@ Invoca y supervisa el skill `docs/skills/sprite_sheet_designer_skill.md`.
     - Tabla de mapeo: Fila, Acción, Número de frames (estándar 4).
     - Especificaciones técnicas: Tamaño de cada frame (ej: 256x256px), padding y márgenes si existen.
     - Guía de implementación: Instrucciones para el motor sobre cómo recortar el spritesheet.
+- **Validación del Usuario**: Muestra los spritesheets finales y la guía, y confirma con el usuario si son de su agrado.
 
 ### 5. Generación de Capas de Paralaje
 Invoca y supervisa el skill `docs/skills/parallax_designer_skill.md`.
@@ -61,6 +64,7 @@ Invoca y supervisa el skill `docs/skills/parallax_designer_skill.md`.
     - Parámetros de velocidad: Multiplicador sugerido (ej: 0.1x a 1.0x).
     - Guía de alineación: Instrucciones sobre si la capa se alinea al fondo (cielo) o a la base (suelo/detalles).
     - Notas sobre continuidad (Seamless): Confirmación de que el scroll lateral es infinito.
+- **Validación del Usuario**: Muestra las capas de paralaje y el informe técnico para su aprobación.
 
 ### 6. Generación de Tilesets
 Invoca y supervisa el skill `docs/skills/tileset_designer_skill.md`.
@@ -71,6 +75,7 @@ Invoca y supervisa el skill `docs/skills/tileset_designer_skill.md`.
     - Dimensiones Base: Resolución total del tileset y tamaño exacto de cada celda individual.
     - Áreas Multicela: Definición clara de objetos que ocupan más de una celda (ej: "Torre: Fila 1-2, Col 1").
     - Sugerencias de Colisión: Clasificación de celdas en "Transitable" (suelo) o "Obstáculo" (muros/objetos sólidos).
+- **Validación del Usuario**: Muestra el tileset y sus metadatos para la aprobación final de activos gráficos.
 
 ### 7. Sincronización con GitHub
 Guía al usuario para:
@@ -104,7 +109,8 @@ Actualiza el archivo `site/data/games.json`.
 1. **Supervisión Estricta**: No pases al siguiente paso hasta que el anterior esté completado con éxito y verificado visualmente.
 2. **Coherencia**: El estilo artístico definido en el paso 1 debe mantenerse rigurosamente en los pasos 4, 5 y 6.
 3. **PVA Mandatorio**: Si una imagen no tiene transparencia, la tarea de generación se considera **INCOMPLETA**. Debes aplicar el post-procesamiento antes de continuar.
-4. **Comunicación**: Mantén al usuario informado de en qué fase te encuentras y qué se espera de él.
+4. **Comunicación y Puntos de Control**: Mantén al usuario informado de en qué fase te encuentras. Al final de cada paso de generación (GDD, Sprites, Parallax, Tilesets), detente y solicita aprobación explícita para continuar.
+5. **Permiso para Rehacer**: Si el usuario no está satisfecho, analiza su feedback, ajusta los parámetros/prompts y repite el paso correspondiente.
 
 ## Tono
-Actúa como un Facilitador Técnico y Director de Arte exigente pero constructivo. Eres el responsable de la calidad final.
+Actúa como un Facilitador Técnico y Director de Arte exigente pero constructivo. Eres el responsable de la calidad final y de la satisfacción del usuario.
