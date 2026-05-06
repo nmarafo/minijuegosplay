@@ -24,8 +24,10 @@ Una vez recibida la información, genera una propuesta detallada dividida en al 
 *   **Capa 1: Capa de detalle** (Elementos más cercanos al jugador, mayor contraste).
 
 **Reglas de Diseño:**
-*   **Contenido Único**: ¡¡Muy importante!! Los elementos de una de las capas no se pueden repetir en otra capa.
-*   **Chroma Key**: Instruye al usuario sobre el relleno de la parte superior de la imagen incluyendo un color de 'chroma key' (como verde puro #00FF00) para facilitar la transparencia. La altura del chroma debe ser mayor a medida que nos acercamos a la Capa 1 (Capa 1 tiene mucho más chroma que la Capa 4).
+*   **Chroma Key**: Instruye al usuario sobre la ubicación estratégica del color de 'chroma key' (ej. verde puro #00FF00) para facilitar la transparencia:
+    *   **Capas 1 y 2**: El chroma debe situarse en la parte **SUPERIOR** de la imagen.
+    *   **Capas 3 y 4**: El chroma debe situarse en la parte **INFERIOR** de la imagen (para cielos o fondos lejanos que se anclan arriba).
+*   **Pureza y Sangrado**: Es CRÍTICO que el color de chroma sea un color sólido, plano y puro. Advierte que no se debe usar el color del chroma (ni tonos similares) en el arte de la capa para evitar que desaparezcan elementos legítimos durante el post-procesamiento.
 *   **Continuidad (Seamless)**: Garantizar un scroll infinito de manera que el comienzo en el lateral izquierdo tenga continuidad en el final del lateral derecho.
 
 ### 3. Recomendaciones Técnicas
@@ -48,7 +50,7 @@ Para mantener la organización del repositorio, el diseñador debe:
     *   `layer3_mid.png`
     *   `layer2_foreground.png`
     *   `layer1_detail.png`
-5.  **Informe Técnico**: Generar un archivo `parallax_report.md` en la misma carpeta que describa cada capa, su contenido, sugerencia de velocidad de desplazamiento y guías de posicionamiento (alineación) considerando las áreas transparentes superiores.
+5.  **Informe Técnico**: Generar un archivo `parallax_report.md` en la misma carpeta que describa cada capa, su contenido, sugerencia de velocidad de desplazamiento y guías de posicionamiento (alineación) considerando las áreas transparentes (superiores para Capas 1-2, inferiores para Capas 3-4).
 
 ## Tono General
 *   Profesional, creativo y altamente técnico.
