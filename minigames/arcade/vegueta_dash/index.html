@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Vegueta Dash: El Enigma de Colón</title>
+    <style>
+        body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: none; }
+        .ui-overlay { position: absolute; top: 30px; width: 760px; display: flex; justify-content: space-between; padding: 0 20px; font-size: 24px; text-shadow: 2px 2px #000; font-weight: bold; pointer-events: none; }
+        .score-box { color: #ffd700; }
+        .item-box { color: #ff4500; }
+        .instructions { margin-top: 15px; color: #aaa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        #loading-screen { position: absolute; background: rgba(0,0,0,0.8); width: 800px; height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <div id="loading-text">Cargando Vegueta... 0%</div>
+    </div>
+
+    <div class="ui-overlay">
+        <div class="score-box">PAPAS: <span id="score">0</span></div>
+        <div class="item-box">PERGAMINO: <span id="items">0</span>/5</div>
+    </div>
+    
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <div class="instructions">ESPACIO: SALTAR | FLECHA ABAJO: DESLIZAR | ESC: PAUSA</div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const loadingScreen = document.getElementById('loading-screen');
+        const loadingText = document.getElementById('loading-text');
+        const scoreEl = document.getElementById('score');
+        const itemsEl = document.getElementById('items');
+
+        const GITHUB_BASE = 'https://github.com/nmarafo/minijuegosplay/blob/main/minigames/arcade/vegueta_dash/assets/';
+        
+        const assets = {
+            hero: GITHUB_BASE + 'spritesheets/explorador_fase1.png?raw=true',
+            dog: GITHUB_BASE + 'spritesheets/presa_fase1.png?raw=true',
+            pigeon: GITHUB_BASE + 'spritesheets/paloma_vegueta.png?raw=true',
+            tiles: GITHUB_BASE + 'tilesets/tileset_vegueta.png?raw=true',
+            p4: GITHUB_BASE + 'parallax/layer4_far.png?raw=true',
+            p3: GITHUB_BASE + 'parallax/layer3_mid.png?raw=true',
+            p2: GITHUB_BASE + 'parallax/layer2_foreground.png?raw=true',
+            p1: GITHUB_BASE + 'parallax/layer1_detail.png?raw=true'
+        };
+
+        const images = {};
+        let loadedCount = 0;
+        const totalAssets = Object.keys(assets).length;
+
+        Object.keys(assets).forEach(key => {
+            images[key] = new Image();
+            images[key].src = assets[key];
+            images[key].onload = () => {
+                loadedCount++;
+                loadingText.innerText = `Cargando Vegueta... ${Math.floor((loadedCount/totalAssets)*100)}%`;
+                if(loadedCount === totalAssets) startGame();
+            };
+        });
+
+        // Game State
+        let score = 0;
+        let items = 0;
+        let scrollX = 0;
+        let gameActive = false;
+        let frameCount = 0;
+        let playerY = 350;
+        let playerVY = 0;
+        let isJumping = false;
+        let isSliding = false;
+
+        function startGame() {
+            loadingScreen.style.display = 'none';
+            gameActive = true;
+            animate();
+        }
+
+        function animate() {
+            if(!gameActive) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Parallax Rendering (Driven by parallax_report.md)
+            // Layer 4: No transparency, full background
+            ctx.drawImage(images.p4, 0, 0, canvas.width, canvas.height);
+            
+            // Layer 3: Mid (0.2x speed) - Top Transparency (align bottom)
+            drawParallax(images.p3, 0.2, 0);
+            
+            // Layer 2: Foreground (0.5x speed) - Top Transparency (align bottom)
+            drawParallax(images.p2, 0.5, 0);
+
+            // 2. Platform Rendering (Driven by tileset_metadata.md)
+            // Row 1, Col 1 is "Adoquines" (256x256)
+            for(let i = 0; i < 5; i++) {
+                ctx.drawImage(images.tiles, 0, 0, 256, 256, (i * 256) + (scrollX % 256), 480, 256, 256);
+            }
+
+            // 3. Characters (Driven by animations_guide.md)
+            const frame = Math.floor(frameCount / 8) % 4;
+            
+            // Player: Row 3 is RUN (Y = 512)
+            let actionY = 512;
+            if(isJumping) actionY = 768; // Row 4
+            if(isSliding) actionY = 256; // Row 2 (Walk/Slide placeholder)
+
+            ctx.drawImage(images.hero, frame * 256, actionY, 256, 256, 150, playerY, 180, 180);
+
+            // Dog: Row 3 is RUN (Y = 512)
+            ctx.drawImage(images.dog, frame * 256, 512, 256, 256, (scrollX * 0.8 % 1200) - 200, 370, 150, 150);
+
+            // Pigeon: Row 1 is FLY (Y = 0)
+            ctx.drawImage(images.pigeon, frame * 256, 0, 256, 256, 600, 150 + Math.sin(frameCount*0.05)*50, 100, 100);
+
+            // 4. Detail Parallax
+            drawParallax(images.p1, 1.0, 0);
+
+            // Physics & Logic
+            if(isJumping) {
+                playerY += playerVY;
+                playerVY += 0.8;
+                if(playerY >= 350) {
+                    playerY = 350;
+                    isJumping = false;
+                }
+            }
+
+            scrollX -= 4;
+            frameCount++;
+            requestAnimationFrame(animate);
+        }
+
+        function drawParallax(img, speed, y) {
+            const x = (scrollX * speed) % canvas.width;
+            ctx.drawImage(img, x, y, canvas.width, canvas.height);
+            ctx.drawImage(img, x + canvas.width, y, canvas.width, canvas.height);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if(!gameActive) return;
+            if(e.code === 'Space' && !isJumping) {
+                isJumping = true;
+                playerVY = -15;
+            }
+            if(e.code === 'ArrowDown') {
+                isSliding = true;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if(e.code === 'ArrowDown') isSliding = false;
+        });
+    </script>
+</body>
+</html>
