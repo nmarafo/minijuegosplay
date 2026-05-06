@@ -21,14 +21,6 @@
       "category": "puzzle",
       "thumbnail": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=400&h=250&auto=format&fit=crop",
       "path": "../minigames/puzzle/memory/index.html"
-    },
-    {
-      "id": "gofio_dash",
-      "title": "Gofio Dash: El Molino",
-      "description": "Salva la producción de gofio en este frenético arcade canario.",
-      "category": "arcade",
-      "thumbnail": "https://images.unsplash.com/photo-1544933863-482c61c301bd?q=80&w=400&h=250&auto=format&fit=crop",
-      "path": "../minigames/arcade/gofio_dash/index.html"
     }
   ]
 }
