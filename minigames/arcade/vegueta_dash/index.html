@@ -105,19 +105,22 @@
 
             // 3. Characters (Driven by animations_guide.md)
             const frame = Math.floor(frameCount / 8) % 4;
+            const spriteW = 256;
+            const spriteH = 256;
+            const crop = 4; // Margen para evitar sangrado
             
             // Player: Row 3 is RUN (Y = 512)
             let actionY = 512;
             if(isJumping) actionY = 768; // Row 4
             if(isSliding) actionY = 256; // Row 2 (Walk/Slide placeholder)
 
-            ctx.drawImage(images.hero, frame * 256, actionY, 256, 256, 150, playerY, 180, 180);
+            ctx.drawImage(images.hero, (frame * spriteW) + crop, actionY + crop, spriteW - (crop * 2), spriteH - (crop * 2), 150, playerY, 180, 180);
 
             // Dog: Row 3 is RUN (Y = 512)
-            ctx.drawImage(images.dog, frame * 256, 512, 256, 256, (scrollX * 0.8 % 1200) - 200, 370, 150, 150);
+            ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), (scrollX * 0.8 % 1200) - 200, 370, 150, 150);
 
             // Pigeon: Row 1 is FLY (Y = 0)
-            ctx.drawImage(images.pigeon, frame * 256, 0, 256, 256, 600, 150 + Math.sin(frameCount*0.05)*50, 100, 100);
+            ctx.drawImage(images.pigeon, (frame * spriteW) + crop, 0 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 600, 150 + Math.sin(frameCount*0.05)*50, 100, 100);
 
             // 4. Detail Parallax
             drawParallax(images.p1, 1.0, 0);
