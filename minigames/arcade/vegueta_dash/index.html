@@ -38,17 +38,17 @@
         const scoreEl = document.getElementById('score');
         const itemsEl = document.getElementById('items');
 
-        const GITHUB_BASE = 'https://github.com/nmarafo/minijuegosplay/blob/main/minigames/arcade/vegueta_dash/assets/';
+        const GITHUB_BASE = 'https://raw.githubusercontent.com/nmarafo/minijuegosplay/main/minigames/arcade/vegueta_dash/assets/';
         
         const assets = {
-            hero: GITHUB_BASE + 'spritesheets/explorador_fase1.png?raw=true',
-            dog: GITHUB_BASE + 'spritesheets/presa_fase1.png?raw=true',
-            pigeon: GITHUB_BASE + 'spritesheets/paloma_vegueta.png?raw=true',
-            tiles: GITHUB_BASE + 'tilesets/tileset_vegueta.png?raw=true',
-            p4: GITHUB_BASE + 'parallax/layer4_far.png?raw=true',
-            p3: GITHUB_BASE + 'parallax/layer3_mid.png?raw=true',
-            p2: GITHUB_BASE + 'parallax/layer2_foreground.png?raw=true',
-            p1: GITHUB_BASE + 'parallax/layer1_detail.png?raw=true'
+            hero: GITHUB_BASE + 'spritesheets/explorador_fase1.png',
+            dog: GITHUB_BASE + 'spritesheets/presa_fase1.png',
+            pigeon: GITHUB_BASE + 'spritesheets/paloma_vegueta.png',
+            tiles: GITHUB_BASE + 'tilesets/tileset_vegueta.png',
+            p4: GITHUB_BASE + 'parallax/layer4_far.png',
+            p3: GITHUB_BASE + 'parallax/layer3_mid.png',
+            p2: GITHUB_BASE + 'parallax/layer2_foreground.png',
+            p1: GITHUB_BASE + 'parallax/layer1_detail.png'
         };
 
         const images = {};
@@ -62,6 +62,11 @@
                 loadedCount++;
                 loadingText.innerText = `Cargando Vegueta... ${Math.floor((loadedCount/totalAssets)*100)}%`;
                 if(loadedCount === totalAssets) startGame();
+            };
+            images[key].onerror = () => {
+                console.error('Error cargando asset:', key, assets[key]);
+                loadingText.innerText = `Error en: ${key}`;
+                loadingText.style.color = '#ff4444';
             };
         });
 
