@@ -1,27 +1,22 @@
-# Metadatos Técnicos del Tileset: Vegueta Dash
+# Mapeo Técnico del Tileset: Vegueta Seamless (v3.0)
 
-Guía de mapeo y colisiones para los elementos arquitectónicos de Vegueta.
+Guía de referencia para el motor de juego. Tileset optimizado para renderizado continuo (edge-to-edge) en suelos y paredes.
 
-## Especificaciones Generales
-- **Archivo**: `tileset_vegueta.png`
-- **Estructura**: Cuadrícula de 4x4.
-- **Resolución de Celda**: 256x256 píxeles.
-- **Resolución Total**: 1024x1024 píxeles.
-- **Perspectiva**: Isométrica 3/4.
+## Especificaciones Técnicas
+- **Dimensiones Totales**: 1024x1024 px.
+- **Tamaño de Celda**: 256x256 px.
+- **Cuadrícula**: 4 Columnas x 4 Filas.
 
 ## Matriz de Elementos (4x4)
 
-| Fila \ Col | Columna 1 | Columna 2 | Columna 3 | Columna 4 |
+| Fila / Columna | Columna 1 (0px) | Columna 2 (256px) | Columna 3 (512px) | Columna 4 (768px) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Fila 1** | Adoquines | Adoquines (Detalle) | Muro Piedra | Muro con ventana |
-| **Fila 2** | Balcón Madera | Balcón (Esquina) | Arco Colonial | Pilar Piedra |
-| **Fila 3** | Puesto Flores | Maceta Geranio | Banco Piedra | Farola Pared |
-| **Fila 4** | Escalón | Reja Hierro | Detalle Pared | Suelo Arena |
+| **Fila 1 (0px)** | **Piedra Canaria (Suelo)** | **Adoquín Viejo (Suelo)** | Ladrillo Colonial | Detalle Suelo |
+| **Fila 2 (256px)** | **Muro Piedra (Pared)** | **Pared Blanca (Pared)** | Ventana Canaria | Balcón Madera |
+| **Fila 3 (512px)** | Farola Ornada | Banco Madera | Maceta Flores | Jarra Barro |
+| **Fila 4 (768px)** | Puerta Antigua | Arco Piedra | Relleno Chroma | Relleno Chroma |
 
-## Áreas Multicela y Colisiones
-- **Arco Colonial**: Ocupa Fila 2, Col 3 y Fila 1, Col 3 (Estructura de paso).
-- **Obstáculos (Sólidos)**: Fila 1, Col 3-4 (Muros), Fila 2 (Balcones y Pilares), Fila 3 (Bancos y Puestos).
-- **Transitable (Suelo)**: Fila 1, Col 1-2 (Adoquines) y Fila 4, Col 4 (Arena).
-
-## Sugerencias de Implementación
-Utilizar los adoquines de la Fila 1 como base para las plataformas. Los balcones de la Fila 2 se pueden colocar como obstáculos aéreos que el jugador debe esquivar deslizándose (slide).
+## Recomendaciones de Uso
+- **Suelos**: Las celdas (1,1) y (1,2) son **seamless**. Pueden repetirse infinitamente sin que se note el corte, ya que rellenan todo el espacio de la celda.
+- **Paredes**: Las celdas (2,1) y (2,2) están diseñadas para apilarse horizontalmente como bloques de construcción.
+- **Colisiones**: Las celdas de la Fila 1 son transitables. El resto de filas contienen obstáculos o elementos decorativos.
