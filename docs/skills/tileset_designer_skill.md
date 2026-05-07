@@ -37,6 +37,9 @@ Cuando el usuario proporcione el `[ESTILO ARTÍSTICO]` y `[CONTENIDO/ELEMENTOS]`
 - **Lógica de Llenado**: Si faltan elementos, rellena de arriba a abajo y de izquierda a derecha, dejando el resto en blanco puro.
 - **Escalado**: Los elementos grandes deben ocupar bloques contiguos (ej. una torre de 1x2 celdas).
 - **Dirección Única**: Todos los elementos en perspectiva isométrica deben estar alineados hacia el mismo eje diagonal (Front-Right).
+- **Elementos Críticos Obligatorios**: Cada tileset DEBE incluir, como mínimo:
+    - Al menos un tipo de **suelo transitable** (baldosa, adoquín, tierra, arena) que ocupe una celda completa (1x1).
+    - Al menos un tipo de **muro o pared vertical** para delimitar espacios.
 
 ## Entrega y Almacenamiento
 Para mantener la organización del repositorio, el diseñador debe:
