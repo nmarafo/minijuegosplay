@@ -2,16 +2,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v1.2 - Enemigos Dinámicos</title>
+    <title>Vegueta Dash v1.3 - Landing Page</title>
     <style>
-        body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: none; }
-        .ui-overlay { position: absolute; top: 30px; width: 760px; display: flex; justify-content: space-between; padding: 0 20px; font-size: 24px; text-shadow: 2px 2px #000; font-weight: bold; pointer-events: none; }
+        body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
+        .ui-overlay { position: absolute; top: 30px; width: 760px; display: flex; justify-content: space-between; padding: 0 20px; font-size: 24px; text-shadow: 2px 2px #000; font-weight: bold; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
         .score-box { color: #ffd700; }
         .item-box { color: #ff4500; }
-        .instructions { margin-top: 15px; color: #aaa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
-        #loading-screen { position: absolute; background: rgba(0,0,0,0.8); width: 800px; height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        .instructions-bar { position: absolute; bottom: 20px; color: #aaa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; opacity: 0; transition: opacity 0.5s; }
+        
+        #loading-screen, #start-screen { position: absolute; width: 800px; height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; border-radius: 8px; overflow: hidden; }
+        #loading-screen { background: #000; }
+        
+        #start-screen { 
+            display: none;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('../../../site/assets/thumbnails/vegueta_dash.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .glass-panel { 
+            background: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(10px); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
+            max-width: 80%;
+        }
+
+        h1 { margin: 0; color: #d4af37; font-size: 48px; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
+        .synopsis { margin: 15px 0; color: #eee; line-height: 1.6; font-size: 18px; }
+        .controls-info { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
+        .key { background: #333; padding: 5px 10px; border-radius: 5px; border-bottom: 3px solid #000; font-family: monospace; color: #ffd700; }
+        
+        .play-btn { 
+            background: #d4af37; color: #000; border: none; padding: 15px 50px; font-size: 24px; font-weight: bold; 
+            border-radius: 50px; cursor: pointer; transition: 0.3s; text-transform: uppercase; margin-top: 10px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+        .play-btn:hover { transform: scale(1.1); background: #fff; box-shadow: 0 0 30px rgba(212, 175, 55, 0.8); }
+
+        .credits { margin-top: 25px; font-size: 12px; color: #888; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+
+        .loader { border: 4px solid #333; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -21,14 +55,32 @@
         <div id="loading-text">Cargando Vegueta... 0%</div>
     </div>
 
-    <div class="ui-overlay">
+    <div id="start-screen">
+        <div class="glass-panel">
+            <h1>Vegueta Dash</h1>
+            <p class="synopsis">Recupera los tesoros perdidos de Cristóbal Colón por las históricas calles del barrio de Vegueta en Las Palmas de Gran Canaria.</p>
+            
+            <div class="controls-info">
+                <div><span class="key">ESPACIO</span> SALTAR</div>
+                <div><span class="key">↓</span> DESLIZAR</div>
+            </div>
+
+            <button class="play-btn" onclick="initGame()">Jugar</button>
+
+            <div class="credits">
+                Idea: MinijuegosPlay Team | Art: AI Parallax System | Dev: Antigravity Engine
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-overlay" id="game-ui">
         <div class="score-box">PAPAS: <span id="score">0</span></div>
         <div class="item-box">PERGAMINO: <span id="items">0</span>/5</div>
     </div>
     
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     
-    <div class="instructions">ESPACIO: SALTAR | FLECHA ABAJO: DESLIZAR | ESC: PAUSA</div>
+    <div class="instructions-bar" id="game-instr">ESPACIO: SALTAR | FLECHA ABAJO: DESLIZAR | ESC: PAUSA</div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -71,11 +123,15 @@
             };
         });
 
+        const startScreen = document.getElementById('start-screen');
+        const gameUI = document.getElementById('game-ui');
+        const gameInstr = document.getElementById('game-instr');
+
         // Game State
         let score = 0;
         let items = 0;
         let scrollX = 0;
-        let gameActive = false;
+        let gameState = 'LOADING'; // LOADING, START, PLAYING
         let frameCount = 0;
         let playerY = 350;
         let playerVY = 0;
@@ -84,12 +140,20 @@
 
         function startGame() {
             loadingScreen.style.display = 'none';
-            gameActive = true;
+            startScreen.style.display = 'flex';
+            gameState = 'START';
+        }
+
+        function initGame() {
+            startScreen.style.display = 'none';
+            gameUI.style.opacity = '1';
+            gameInstr.style.opacity = '1';
+            gameState = 'PLAYING';
             animate();
         }
 
         function animate() {
-            if(!gameActive) return;
+            if(gameState !== 'PLAYING') return;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -166,7 +230,7 @@
         }
 
         window.addEventListener('keydown', (e) => {
-            if(!gameActive) return;
+            if(gameState !== 'PLAYING') return;
             if(e.code === 'Space' && !isJumping) {
                 isJumping = true;
                 playerVY = -15;
