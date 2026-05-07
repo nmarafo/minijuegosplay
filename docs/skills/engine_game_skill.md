@@ -49,7 +49,8 @@ Antes de escribir una sola línea de código, **DEBES** analizar los siguientes 
   - **Consecuencia de Impacto**: Al detectar una colisión:
     - Restar una vida.
     - Activar un periodo de **Invulnerabilidad** (ej. 60 frames / 1 segundo).
-    - Ejecutar **Feedback Visual**: El protagonista debe parpadear (flicker) y/o temblar (shake) para indicar daño.
+    - **Animación de Impacto**: Además del flicker/shake, el motor DEBE cambiar la fila del spritesheet a la animación de **'Hurt'** (Daño). Si no existe una fila específica de daño, se utilizará la de 'Idle' como fallback durante el estado de invulnerabilidad.
+    - **Requisito de Diseño**: Se establece que los futuros spritesheets generados por la IA deben incluir una fila dedicada a la animación de 'Daño' (Hurt) para feedback visual máximo.
   - **GameOver**: Solo se regresa a la `Start Screen` cuando el contador de vidas llegue a cero.
 - **Equilibrio de Velocidad (Playability)**: Las velocidades de los enemigos deben ser testeadas para permitir un tiempo de reacción humano (ej. no superar los 10px por frame en condiciones normales).
 - **Spawning Matemático y Visibilidad**: Para evitar el bug del "enemigo invisible", asegúrate de que la fórmula de ciclo (ej. `(scrollX * speed) % distance`) cubra el ancho total del canvas de modo que el enemigo cruce la pantalla de lado a lado antes de reaparecer.
