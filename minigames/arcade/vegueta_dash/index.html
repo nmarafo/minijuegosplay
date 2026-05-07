@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v1.7 - Animación de Daño</title>
+    <title>Vegueta Dash v1.8 - Parallax Optimizado</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -228,8 +228,8 @@
                 takeDamage();
             }
 
-            // 6. Detail Parallax
-            drawParallax(images.p1, 1.0, 0);
+            // 6. Detail Parallax (Layer 1) - Ampliada un 30% para mayor profundidad
+            drawParallax(images.p1, 1.0, -100, 1.3);
 
             // Physics
             if(isJumping) {
@@ -275,10 +275,16 @@
             isJumping = false;
         }
 
-        function drawParallax(img, speed, y) {
-            const x = (scrollX * speed) % canvas.width;
-            ctx.drawImage(img, x, y, canvas.width, canvas.height);
-            ctx.drawImage(img, x + canvas.width, y, canvas.width, canvas.height);
+        function drawParallax(img, speed, y = 0, scale = 1.0) {
+            const w = canvas.width * scale;
+            const h = canvas.height * scale;
+            const x = Math.floor((scrollX * speed) % w);
+            
+            ctx.drawImage(img, x, y, w + 1, h);
+            ctx.drawImage(img, x + w, y, w + 1, h);
+            if (x + w < canvas.width) {
+                ctx.drawImage(img, x + (w * 2), y, w + 1, h);
+            }
         }
 
         window.addEventListener('keydown', (e) => {
