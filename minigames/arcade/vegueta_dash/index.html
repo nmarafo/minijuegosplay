@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v2.6 - Retorno del Suelo</title>
+    <title>Vegueta Dash v2.7 - Salto Potenciado</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -175,8 +175,10 @@
 
             // 2. Platform Rendering (Recuperado con crop de seguridad)
             for(let i = 0; i < 5; i++) {
-                // Dibujamos los Adoquines (Fila 1, Col 1 -> 0,0) con crop de 30px
+                // Fila 1: Adoquines (Col 1 -> 0,0)
                 ctx.drawImage(images.tiles, 0, 30, 256, 226, (i * 256) + (scrollX % 256), 480, 256, 226);
+                // Fila 2: Baldosas Alternativas (Col 2 -> 256,0) - Debajo de la primera
+                ctx.drawImage(images.tiles, 256, 30, 256, 226, (i * 256) + (scrollX % 256), 550, 256, 226);
             }
 
             // 3. Character Animation
@@ -292,7 +294,7 @@
             if(gameState !== 'PLAYING') return;
             if(e.code === 'Space' && !isJumping) {
                 isJumping = true;
-                playerVY = -15;
+                playerVY = -18;
             }
             if(e.code === 'ArrowDown') isSliding = true;
         });
