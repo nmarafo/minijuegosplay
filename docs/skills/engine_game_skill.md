@@ -45,7 +45,12 @@ Antes de escribir una sola línea de código, **DEBES** analizar los siguientes 
 - **Lógica de Esquivado y Colisiones**: 
   - El motor debe implementar detección de colisiones mediante AABB (Axis-Aligned Bounding Boxes).
   - **Hitboxes Ajustadas**: Las cajas de colisión deben ser ligeramente menores que el sprite visual para que el juego sea "justo" y no frustre al jugador.
-  - **Consecuencia**: Al detectar una colisión con un enemigo, el juego debe disparar un evento de `gameOver` que limpie el estado y regrese al jugador a la `Start Screen`.
+  - **Sistema de Vidas**: El motor debe permitir configurar un número de vidas (por defecto 3).
+  - **Consecuencia de Impacto**: Al detectar una colisión:
+    - Restar una vida.
+    - Activar un periodo de **Invulnerabilidad** (ej. 60 frames / 1 segundo).
+    - Ejecutar **Feedback Visual**: El protagonista debe parpadear (flicker) y/o temblar (shake) para indicar daño.
+  - **GameOver**: Solo se regresa a la `Start Screen` cuando el contador de vidas llegue a cero.
 - **Equilibrio de Velocidad (Playability)**: Las velocidades de los enemigos deben ser testeadas para permitir un tiempo de reacción humano (ej. no superar los 10px por frame en condiciones normales).
 - **Spawning Matemático y Visibilidad**: Para evitar el bug del "enemigo invisible", asegúrate de que la fórmula de ciclo (ej. `(scrollX * speed) % distance`) cubra el ancho total del canvas de modo que el enemigo cruce la pantalla de lado a lado antes de reaparecer.
   - **Importante**: Si el sistema utiliza un `scrollX` que decrementa (valores negativos), utiliza siempre `Math.abs(scrollX)` dentro de la operación de módulo. De lo contrario, el resultado será negativo y el enemigo se desplazará infinitamente hacia la derecha fuera del canvas.
