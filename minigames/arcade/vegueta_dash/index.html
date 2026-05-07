@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v2.7 - Salto Potenciado</title>
+    <title>Vegueta Dash v2.8 - Ajuste de Suelo y Perro</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -175,10 +175,10 @@
 
             // 2. Platform Rendering (Recuperado con crop de seguridad)
             for(let i = 0; i < 5; i++) {
-                // Fila 1: Adoquines (Col 1 -> 0,0)
-                ctx.drawImage(images.tiles, 0, 30, 256, 226, (i * 256) + (scrollX % 256), 480, 256, 226);
-                // Fila 2: Baldosas Alternativas (Col 2 -> 256,0) - Debajo de la primera
-                ctx.drawImage(images.tiles, 256, 30, 256, 226, (i * 256) + (scrollX % 256), 550, 256, 226);
+                // Fila 1: Adoquines Detalle (Col 2 -> 256,0)
+                ctx.drawImage(images.tiles, 256, 30, 256, 226, (i * 256) + (scrollX % 256), 480, 256, 226);
+                // Fila 2: Muro/Piedra (Col 3 -> 512,0) - Para ver como queda
+                ctx.drawImage(images.tiles, 512, 30, 256, 226, (i * 256) + (scrollX % 256), 550, 256, 226);
             }
 
             // 3. Character Animation
@@ -209,9 +209,9 @@
             // 4. Enemies
             let dogX = 800 - ((Math.abs(scrollX) * 1.2) % 1600); 
             ctx.save();
-            ctx.translate(dogX + 120, 400); // Bajado un poco para ajustar al nuevo tamaño
+            ctx.translate(dogX + 90, 430); // Ajustado al nuevo tamaño (90x90)
             ctx.scale(-1, 1);
-            ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 120, 120);
+            ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 90, 90);
             ctx.restore();
 
             let pigeonX = 800 - ((Math.abs(scrollX) * 1.6) % 1800);
@@ -224,7 +224,7 @@
 
             // 5. Collision Detection (Hitboxes ajustadas para ser más justas)
             const pHit = { x: 190, y: playerY + 30, w: 80, h: 120 };
-            const dHit = { x: dogX + 20, y: 420, w: 80, h: 80 };
+            const dHit = { x: dogX + 15, y: 440, w: 60, h: 60 };
             const piHit = { x: pigeonX + 10, y: pigeonY + 10, w: 60, h: 40 };
 
             if (invulnerableFrames === 0 && (checkCollision(pHit, dHit) || checkCollision(pHit, piHit))) {
