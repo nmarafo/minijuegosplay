@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v3.1 - Suelo Original</title>
+    <title>Vegueta Dash v3.2 - Ajuste Final del Suelo</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -173,12 +173,12 @@
             drawParallax(images.p3, 0.2, 0);
             drawParallax(images.p2, 0.5, 0);
 
-            // 2. Platform Rendering (Recuperado con crop de seguridad)
+            // 2. Platform Rendering (Suelo bajado a la altura de los pies: 530)
             for(let i = 0; i < 5; i++) {
-                // Fila 1: Piedra Canaria (Col 1 -> 0,0) - Volvemos a y=480
-                ctx.drawImage(images.tiles, 0, 30, 256, 226, (i * 256) + (scrollX % 256), 480, 256, 226);
-                // Fila 2: Adoquín Viejo (Col 2 -> 256,0) - Volvemos a y=550
-                ctx.drawImage(images.tiles, 256, 30, 256, 226, (i * 256) + (scrollX % 256), 550, 256, 226);
+                // Fila 1: Piedra Canaria (Col 1 -> 0,0) - Bajada a y=530
+                ctx.drawImage(images.tiles, 0, 30, 256, 226, (i * 256) + (scrollX % 256), 530, 256, 226);
+                // Fila 2: Adoquín Viejo (Col 2 -> 256,0) - Bajada a y=600
+                ctx.drawImage(images.tiles, 256, 30, 256, 226, (i * 256) + (scrollX % 256), 600, 256, 226);
             }
 
             // 3. Character Animation
@@ -209,7 +209,7 @@
             // 4. Enemies
             let dogX = 800 - ((Math.abs(scrollX) * 1.2) % 1600); 
             ctx.save();
-            ctx.translate(dogX + 90, 390); // Vuelve a y=390 para caminar sobre y=480 (480 - 90 = 390)
+            ctx.translate(dogX + 90, 440); // Perro sobre el nuevo suelo (530 - 90 = 440)
             ctx.scale(-1, 1);
             ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 90, 90);
             ctx.restore();
@@ -224,7 +224,7 @@
 
             // 5. Collision Detection (Hitboxes ajustadas para ser más justas)
             const pHit = { x: 190, y: playerY + 30, w: 80, h: 120 };
-            const dHit = { x: dogX + 15, y: 400, w: 60, h: 60 };
+            const dHit = { x: dogX + 15, y: 450, w: 60, h: 60 };
             const piHit = { x: pigeonX + 10, y: pigeonY + 10, w: 60, h: 40 };
 
             if (invulnerableFrames === 0 && (checkCollision(pHit, dHit) || checkCollision(pHit, piHit))) {
