@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v2.2 - Mega Parallax</title>
+    <title>Vegueta Dash v2.3 - Nuevo Foreground</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -231,8 +231,8 @@
                 takeDamage();
             }
 
-            // 6. Detail Parallax (Layer 1) - Mega ampliada (2.0x) y subida (y=-500)
-            drawParallax(images.p1, 1.0, -500, 2.0);
+            // 6. Detail Parallax (Layer 1) - Elementos separados y grandes (v2.3)
+            drawParallax(images.p1, 1.0, -100, 1.2);
 
             // Physics
             if(isJumping) {
