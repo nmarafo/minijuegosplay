@@ -40,6 +40,11 @@ Antes de escribir una sola línea de código, **DEBES** analizar los siguientes 
 - Implementa colisiones basadas en la clasificación de "Sólido" vs "Transitable" definida en los metadatos.
 - Usa cajas de colisión (AABB) optimizadas para el rendimiento.
 
+### 5. Comportamiento de Enemigos y Obstáculos
+- **Dirección Opuesta**: Por estándar, los enemigos (oponentes) y obstáculos dinámicos deben aparecer desde el lado derecho del canvas y desplazarse hacia la izquierda (dirección opuesta al avance del protagonista).
+- **Lógica de Esquivado**: El motor debe implementar áreas de colisión que obliguen al jugador a saltar (jump) o deslizarse (slide) según la altura del enemigo.
+- **Spawning Aleatorio**: Implementar un sistema básico de generación de enemigos con intervalos de tiempo o distancia aleatorios para mantener el desafío.
+
 ## Estructura Sugerida del Motor (`index.html`)
 ```javascript
 // 1. Configuración y Assets (URLs de GitHub)

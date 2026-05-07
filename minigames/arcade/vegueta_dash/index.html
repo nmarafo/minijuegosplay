@@ -122,11 +122,26 @@
 
             ctx.drawImage(images.hero, (frame * spriteW) + crop, actionY + crop, spriteW - (crop * 2), spriteH - (crop * 2), 150, playerY, 180, 180);
 
-            // Dog: Row 3 is RUN (Y = 512)
-            ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), (scrollX * 0.8 % 1200) - 200, 370, 150, 150);
+            // 4. Enemies & Opponents (Moving Right to Left)
+            const enemySpeed = 5;
+            
+            // Dog (Presa Canario) - Ground Opponent
+            // Using modulo to wrap from right to left
+            let dogX = 1200 - ((scrollX * 1.5) % 2000);
+            ctx.save();
+            ctx.translate(dogX + 150, 370);
+            ctx.scale(-1, 1); // Flip to face the player
+            ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 150, 150);
+            ctx.restore();
 
-            // Pigeon: Row 1 is FLY (Y = 0)
-            ctx.drawImage(images.pigeon, (frame * spriteW) + crop, 0 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 600, 150 + Math.sin(frameCount*0.05)*50, 100, 100);
+            // Pigeon - Aerial Opponent
+            let pigeonX = 1500 - ((scrollX * 2.0) % 2500);
+            let pigeonY = 150 + Math.sin(frameCount * 0.05) * 50;
+            ctx.save();
+            ctx.translate(pigeonX + 100, pigeonY);
+            ctx.scale(-1, 1); // Flip to face the player
+            ctx.drawImage(images.pigeon, (frame * spriteW) + crop, 0 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 100, 100);
+            ctx.restore();
 
             // 4. Detail Parallax
             drawParallax(images.p1, 1.0, 0);
