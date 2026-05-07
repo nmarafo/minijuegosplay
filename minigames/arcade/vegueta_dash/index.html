@@ -103,16 +103,17 @@
                 ctx.drawImage(images.tiles, 0, 0, 256, 256, (i * 256) + (scrollX % 256), 480, 256, 256);
             }
 
-            // 3. Characters (Driven by animations_guide.md)
-            const frame = Math.floor(frameCount / 8) % 4;
+            // 3. Characters (Driven by animations_guide.md 4x4)
+            const animSpeed = isSliding ? 4 : 6; // Más rápido al deslizar/correr
+            const frame = Math.floor(frameCount / animSpeed) % 4;
             const spriteW = 256;
             const spriteH = 256;
-            const crop = 4; // Margen para evitar sangrado
+            const crop = 4; // Margen de seguridad para evitar sangrado
             
-            // Player: Row 3 is RUN (Y = 512)
-            let actionY = 512;
-            if(isJumping) actionY = 768; // Row 4
-            if(isSliding) actionY = 256; // Row 2 (Walk/Slide placeholder)
+            // Player Rows: 1:Idle(0), 2:Walk(256), 3:Run(512), 4:Jump(768)
+            let actionY = 512; // Run por defecto
+            if(isJumping) actionY = 768; 
+            if(isSliding) actionY = 256; // Usamos Walk para el slide por ahora
 
             ctx.drawImage(images.hero, (frame * spriteW) + crop, actionY + crop, spriteW - (crop * 2), spriteH - (crop * 2), 150, playerY, 180, 180);
 

@@ -47,8 +47,8 @@ Invoca y supervisa el skill `docs/skills/game_designer_skill.md`.
 
 ### 4. Generación de Spritesheets
 Invoca y supervisa el skill `docs/skills/sprite_sheet_designer_skill.md`.
-- Generar las fases de animación (7x4 grid estricta).
-- **Supervisión PVA**: Verificar que la imagen tiene exactamente 7 filas y 4 columnas. Verificar limpieza de fondo. Si es blanco o negro sólido, usa el script de `scratch/` correspondiente.
+- Generar las fases de animación (**4x4 grid estricta**).
+- **Supervisión PVA**: Verificar que la imagen tiene exactamente **4 filas y 4 columnas**. Verificar limpieza de fondo. Si es blanco o negro sólido, usa el script de `scratch/` correspondiente.
 - **Verificar la creación precisa de `animations_guide.md`**, que debe incluir:
     - Tabla de mapeo: Fila, Acción, Número de frames (estándar 4).
     - Especificaciones técnicas: Tamaño de cada frame (ej: 256x256px), padding y márgenes si existen.
