@@ -44,6 +44,7 @@ Antes de escribir una sola línea de código, **DEBES** analizar los siguientes 
 - **Dirección Opuesta**: Por estándar, los enemigos y obstáculos dinámicos deben aparecer desde el lado derecho del canvas y desplazarse hacia la izquierda (dirección opuesta al avance del protagonista).
 - **Lógica de Esquivado**: El motor debe implementar áreas de colisión que obliguen al jugador a saltar (jump) o deslizarse (slide) según la altura del enemigo.
 - **Spawning Matemático y Visibilidad**: Para evitar el bug del "enemigo invisible", asegúrate de que la fórmula de ciclo (ej. `(scrollX * speed) % distance`) cubra el ancho total del canvas de modo que el enemigo cruce la pantalla de lado a lado antes de reaparecer.
+  - **Importante**: Si el sistema utiliza un `scrollX` que decrementa (valores negativos), utiliza siempre `Math.abs(scrollX)` dentro de la operación de módulo. De lo contrario, el resultado será negativo y el enemigo se desplazará infinitamente hacia la derecha fuera del canvas.
 - **Renderizado Espejo (Flip) Correcto**: Al voltear sprites horizontales para que miren al jugador, NUNCA uses escalados sin compensar la anchura. **Regla de oro para el flip**:
   ```javascript
   ctx.save();
