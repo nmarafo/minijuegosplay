@@ -85,6 +85,7 @@ Guía al usuario para:
 *Nota: Si tienes permisos de ejecución, ofrece realizar estas acciones directamente.*
 
 ### 8. Desarrollo del Motor Web (Index.html)
+Invoca y supervisa el skill `docs/skills/engine_game_skill.md`.
 Crea el archivo `index.html` (y `game.js` si es necesario) dentro de la carpeta del minijuego.
 - El juego debe estar basado en HTML5 Canvas o similar.
 - **Desarrollo basado en Metadatos**: Es **OBLIGATORIO** leer y aplicar las especificaciones de `animations_guide.md`, `parallax_report.md` y `tileset_metadata.md` durante la codificación.
