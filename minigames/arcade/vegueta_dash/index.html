@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v3.5 - Fix de Carga</title>
+    <title>Vegueta Dash v3.6 - Rutas Locales</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -70,7 +70,7 @@
             <button class="play-btn" onclick="initGame()">Jugar</button>
 
             <div class="credits">
-                Idea: MinijuegosPlay Team | Dev: Antigravity Engine v3.5
+                Idea: MinijuegosPlay Team | Dev: Antigravity Engine v3.6
             </div>
         </div>
     </div>
@@ -120,17 +120,15 @@
             }
         }
 
-        const GITHUB_BASE = 'https://raw.githubusercontent.com/nmarafo/minijuegosplay/main/minigames/arcade/vegueta_dash/assets/';
-        const v = Date.now();
-        images.hero.src = GITHUB_BASE + 'spritesheets/explorador_fase2.png?v=' + v;
-        images.dog.src = GITHUB_BASE + 'spritesheets/presa_fase1.png?v=' + v;
-        images.pigeon.src = GITHUB_BASE + 'spritesheets/paloma_vegueta.png?v=' + v;
-        images.potato.src = GITHUB_BASE + 'spritesheets/papa.png?v=' + v;
-        images.p1.src = GITHUB_BASE + 'parallax/layer1_detail.png?v=' + v;
-        images.p2.src = GITHUB_BASE + 'parallax/layer2_foreground.png?v=' + v;
-        images.p3.src = GITHUB_BASE + 'parallax/layer3_mid.png?v=' + v;
-        images.p4.src = GITHUB_BASE + 'parallax/layer4_far.png?v=' + v;
-        images.tiles.src = GITHUB_BASE + 'tilesets/tileset_vegueta.png?v=' + v;
+        images.hero.src = 'assets/spritesheets/explorador_fase2.png';
+        images.dog.src = 'assets/spritesheets/presa_fase1.png';
+        images.pigeon.src = 'assets/spritesheets/paloma_vegueta.png';
+        images.potato.src = 'assets/spritesheets/papa.png';
+        images.p1.src = 'assets/parallax/layer1_detail.png';
+        images.p2.src = 'assets/parallax/layer2_foreground.png';
+        images.p3.src = 'assets/parallax/layer3_mid.png';
+        images.p4.src = 'assets/parallax/layer4_far.png';
+        images.tiles.src = 'assets/tilesets/tileset_vegueta.png';
 
         Object.values(images).forEach(img => img.onload = checkImagesLoaded);
 
