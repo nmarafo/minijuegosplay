@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v3.3 - ¡Lanzamiento de Papas!</title>
+    <title>Vegueta Dash v3.4 - Controles Optimizados</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -60,18 +60,17 @@
     <div id="start-screen">
         <div class="glass-panel">
             <h1>Vegueta Dash</h1>
-            <p class="synopsis">Recupera los tesoros perdidos de Cristóbal Colón. ¡Lanza papas para ahuyentar a los enemigos!</p>
+            <p class="synopsis">Recupera los tesoros perdidos de Cristóbal Colón. ¡Usa tus papas con sabiduría!</p>
             
             <div class="controls-info">
                 <div><span class="key">ESPACIO</span> SALTAR</div>
-                <div><span class="key">↓</span> DESLIZAR</div>
-                <div><span class="key">F</span> LANZAR PAPA</div>
+                <div><span class="key">↓</span> LANZAR PAPA</div>
             </div>
 
             <button class="play-btn" onclick="initGame()">Jugar</button>
 
             <div class="credits">
-                Idea: MinijuegosPlay Team | Dev: Antigravity Engine v3.3
+                Idea: MinijuegosPlay Team | Dev: Antigravity Engine v3.4
             </div>
         </div>
     </div>
@@ -85,7 +84,7 @@
     
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     
-    <div class="instructions-bar" id="game-instr">ESPACIO: SALTAR | FLECHA ABAJO: DESLIZAR | F: LANZAR PAPA | ESC: PAUSA</div>
+    <div class="instructions-bar" id="game-instr">ESPACIO: SALTAR | FLECHA ABAJO: LANZAR PAPA | ESC: PAUSA</div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -121,7 +120,6 @@
             }
         }
 
-        // Sources
         const GITHUB_BASE = 'https://raw.githubusercontent.com/nmarafo/minijuegosplay/main/minigames/arcade/vegueta_dash/assets/';
         const v = Date.now();
         images.hero.src = GITHUB_BASE + 'spritesheets/pastor_fase2.png?v=' + v;
@@ -140,7 +138,6 @@
         const gameUI = document.getElementById('game-ui');
         const gameInstr = document.getElementById('game-instr');
 
-        // Game State
         let gameState = 'START';
         let score = 0;
         let lives = 3;
@@ -150,11 +147,9 @@
         let playerY = 350;
         let playerVY = 0;
         let isJumping = false;
-        let isSliding = false;
         let frameCount = 0;
         let invulnerableFrames = 0;
 
-        // Potato Weapon System
         let thrownPotatoes = [];
         let dogFleeing = false;
         let dogFleeTimer = 0;
@@ -165,11 +160,6 @@
             livesEl.innerText = "❤️".repeat(lives);
             ammoEl.innerText = "🥔 " + ammo;
             phaseEl.innerText = "FASE " + currentPhase;
-        }
-
-        function startGame() {
-            loadingScreen.style.display = 'none';
-            startScreen.style.display = 'flex';
         }
 
         function initGame() {
@@ -199,48 +189,27 @@
             }
         }
 
-        function startGame() {
-            loadingScreen.style.display = 'none';
-            startScreen.style.display = 'flex';
-            gameState = 'START';
-        }
-
-        function initGame() {
-            startScreen.style.display = 'none';
-            gameUI.style.opacity = '1';
-            gameInstr.style.opacity = '1';
-            gameState = 'PLAYING';
-            lives = 3;
-            updateLivesDisplay();
-            animate();
-        }
-
         function animate() {
             if(gameState !== 'PLAYING') return;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 1. Parallax Rendering
             ctx.drawImage(images.p4, 0, 0, canvas.width, canvas.height);
             drawParallax(images.p3, 0.2, 0);
             drawParallax(images.p2, 0.5, 0);
 
-            // 2. Platform Rendering (Suelo bajado a la altura de los pies: 530)
             for(let i = 0; i < 5; i++) {
                 ctx.drawImage(images.tiles, 0, 30, 256, 226, (i * 256) + (scrollX % 256), 530, 256, 226);
                 ctx.drawImage(images.tiles, 256, 30, 256, 226, (i * 256) + (scrollX % 256), 600, 256, 226);
             }
 
-            // 3. Character Animation
-            const animSpeed = isSliding ? 4 : 6;
-            const frame = Math.floor(frameCount / animSpeed) % 4;
+            const frame = Math.floor(frameCount / 6) % 4;
             const spriteW = 256;
             const spriteH = 256;
             const crop = 4;
             
-            let actionY = 512; // Run
+            let actionY = 512; 
             if(isJumping) actionY = 768; 
-            if(isSliding) actionY = 256;
             if(invulnerableFrames > 0) actionY = 0;
 
             ctx.save();
@@ -253,25 +222,23 @@
             ctx.drawImage(images.hero, (frame * spriteW) + crop, actionY + crop, spriteW - (crop * 2), spriteH - (crop * 2), 150 + shakeX, playerY, 180, 180);
             ctx.restore();
 
-            // 4. Enemies Logic (Dog)
             if (!dogFleeing) {
                 dogXPos = 800 - ((Math.abs(scrollX) * 1.2) % 1600); 
             } else {
-                dogXPos += 15; // Huida rápida a la derecha
+                dogXPos += 15;
                 if (dogXPos > 1000) {
-                    dogFleeing = false; // Reset para el siguiente ciclo
-                    dogXPos = -200; // Aparecerá por el scroll normal
+                    dogFleeing = false;
+                    dogXPos = -200;
                 }
             }
 
             ctx.save();
             ctx.translate(dogXPos + 90, 440);
-            if (!dogFleeing) ctx.scale(-1, 1); // Mirando a la izquierda normal
-            else ctx.scale(1, 1); // Mirando a la derecha huyendo
+            if (!dogFleeing) ctx.scale(-1, 1);
+            else ctx.scale(1, 1);
             ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 90, 90);
             ctx.restore();
 
-            // Pigeon Logic
             let pigeonX = 800 - ((Math.abs(scrollX) * 1.6) % 1800);
             let pigeonY = 150 + Math.sin(frameCount * 0.1) * 60;
             ctx.save();
@@ -280,21 +247,18 @@
             ctx.drawImage(images.pigeon, (frame * spriteW) + crop, 0 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 80, 80);
             ctx.restore();
 
-            // 5. Potatos Logic
             thrownPotatoes.forEach((p, index) => {
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.4; // Gravedad
+                p.vy += 0.4;
                 p.rot += 0.2;
 
-                // Render Papa
                 ctx.save();
                 ctx.translate(p.x, p.y);
                 ctx.rotate(p.rot);
                 ctx.drawImage(images.potato, 0, 0, 256, 256, -25, -25, 50, 50);
                 ctx.restore();
 
-                // Colisión con Perro
                 const pRect = { x: p.x - 20, y: p.y - 20, w: 40, h: 40 };
                 const dRect = { x: dogXPos, y: 440, w: 90, h: 90 };
 
@@ -303,12 +267,9 @@
                     score += 500;
                     thrownPotatoes.splice(index, 1);
                 }
-
-                // Limpiar papas fuera
                 if (p.y > 600 || p.x > 800) thrownPotatoes.splice(index, 1);
             });
 
-            // 6. Collision Detection (Player)
             const pHit = { x: 190, y: playerY + 30, w: 80, h: 120 };
             const dHit = { x: dogXPos + 15, y: 450, w: 60, h: 60 };
             const piHit = { x: pigeonX + 10, y: pigeonY + 10, w: 60, h: 40 };
@@ -317,10 +278,8 @@
                 takeDamage();
             }
 
-            // 7. Parallax Foreground
             drawParallax(images.p1, 1.0, 0, 1.2);
 
-            // Physics & Score
             if(isJumping) {
                 playerY += playerVY;
                 playerVY += 0.8;
@@ -334,11 +293,10 @@
                 score += 10;
                 updateUI();
                 
-                // Sistema de Fases
                 let newPhase = Math.floor(score / 1000) + 1;
                 if (newPhase > currentPhase) {
                     currentPhase = newPhase;
-                    ammo = 5; // Reponer munición
+                    ammo = 5;
                     updateUI();
                 }
             }
@@ -383,12 +341,7 @@
                 isJumping = true;
                 playerVY = -18;
             }
-            if(e.code === 'ArrowDown') isSliding = true;
-            if(e.code === 'KeyF' || e.code === 'Enter') throwPotato();
-        });
-
-        window.addEventListener('keyup', (e) => {
-            if(e.code === 'ArrowDown') isSliding = false;
+            if(e.code === 'ArrowDown') throwPotato();
         });
     </script>
 </body>
