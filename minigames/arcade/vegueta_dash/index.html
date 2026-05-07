@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v1.4 - Landing Page</title>
+    <title>Vegueta Dash v1.5 - Colisiones</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -188,16 +188,15 @@
             ctx.drawImage(images.hero, (frame * spriteW) + crop, actionY + crop, spriteW - (crop * 2), spriteH - (crop * 2), 150, playerY, 180, 180);
 
             // 4. Enemies & Opponents (Moving Right to Left)
-            // Hacemos que aparezcan mucho más rápido para asegurar que son visibles.
-            let dogX = 800 - ((Math.abs(scrollX) * 3.0) % 1600); 
+            // Ajustamos velocidades para que sea jugable (1.5x y 2.0x)
+            let dogX = 800 - ((Math.abs(scrollX) * 1.5) % 1600); 
             ctx.save();
-            ctx.translate(dogX + 150, 370); // Trasladamos al borde derecho del sprite
-            ctx.scale(-1, 1); // Volteamos horizontalmente
+            ctx.translate(dogX + 150, 370);
+            ctx.scale(-1, 1);
             ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 150, 150);
             ctx.restore();
 
-            // Pigeon - Aerial Opponent (Aparece más frecuente)
-            let pigeonX = 800 - ((Math.abs(scrollX) * 4.0) % 1800);
+            let pigeonX = 800 - ((Math.abs(scrollX) * 2.0) % 1800);
             let pigeonY = 150 + Math.sin(frameCount * 0.1) * 60;
             ctx.save();
             ctx.translate(pigeonX + 100, pigeonY);
@@ -205,7 +204,25 @@
             ctx.drawImage(images.pigeon, (frame * spriteW) + crop, 0 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 100, 100);
             ctx.restore();
 
-            // 4. Detail Parallax
+            // 5. Collision Detection
+            // Hitbox del jugador (ajustada para ser justa)
+            const pHit = { x: 190, y: playerY + 30, w: 80, h: 120 };
+            const dHit = { x: dogX + 20, y: 390, w: 110, h: 100 };
+            const piHit = { x: pigeonX + 10, y: pigeonY + 10, w: 80, h: 60 };
+
+            // Dibujar hitboxes para debug (comentar en producción)
+            /*
+            ctx.strokeStyle = "red";
+            ctx.strokeRect(pHit.x, pHit.y, pHit.w, pHit.h);
+            ctx.strokeRect(dHit.x, dHit.y, dHit.w, dHit.h);
+            ctx.strokeRect(piHit.x, piHit.y, piHit.w, piHit.h);
+            */
+
+            if (checkCollision(pHit, dHit) || checkCollision(pHit, piHit)) {
+                gameOver();
+            }
+
+            // 6. Detail Parallax
             drawParallax(images.p1, 1.0, 0);
 
             // Physics & Logic
@@ -218,9 +235,33 @@
                 }
             }
 
+            // Puntaje por distancia
+            if(frameCount % 10 === 0) {
+                score++;
+                scoreEl.innerText = score;
+            }
+
             scrollX -= 4;
             frameCount++;
             requestAnimationFrame(animate);
+        }
+
+        function checkCollision(a, b) {
+            return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+        }
+
+        function gameOver() {
+            gameState = 'START';
+            startScreen.style.display = 'flex';
+            gameUI.style.opacity = '0';
+            gameInstr.style.opacity = '0';
+            // Reset variables
+            score = 0;
+            scoreEl.innerText = "0";
+            scrollX = 0;
+            playerY = 350;
+            playerVY = 0;
+            isJumping = false;
         }
 
         function drawParallax(img, speed, y) {
