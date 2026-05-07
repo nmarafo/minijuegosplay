@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v3.6 - Rutas Locales</title>
+    <title>Vegueta Dash v3.6 - Dog Fix & Smooth Run</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -120,15 +120,17 @@
             }
         }
 
-        images.hero.src = 'assets/spritesheets/explorador_fase2.png';
-        images.dog.src = 'assets/spritesheets/presa_fase1.png';
-        images.pigeon.src = 'assets/spritesheets/paloma_vegueta.png';
-        images.potato.src = 'assets/spritesheets/papa.png';
-        images.p1.src = 'assets/parallax/layer1_detail.png';
-        images.p2.src = 'assets/parallax/layer2_foreground.png';
-        images.p3.src = 'assets/parallax/layer3_mid.png';
-        images.p4.src = 'assets/parallax/layer4_far.png';
-        images.tiles.src = 'assets/tilesets/tileset_vegueta.png';
+        const GITHUB_BASE = 'https://raw.githubusercontent.com/nmarafo/minijuegosplay/main/minigames/arcade/vegueta_dash/assets/';
+        const v = Date.now();
+        images.hero.src = GITHUB_BASE + 'spritesheets/explorador_fase2.png?v=' + v;
+        images.dog.src = GITHUB_BASE + 'spritesheets/presa_fase1.png?v=' + v;
+        images.pigeon.src = GITHUB_BASE + 'spritesheets/paloma_vegueta.png?v=' + v;
+        images.potato.src = GITHUB_BASE + 'spritesheets/papa.png?v=' + v;
+        images.p1.src = GITHUB_BASE + 'parallax/layer1_detail.png?v=' + v;
+        images.p2.src = GITHUB_BASE + 'parallax/layer2_foreground.png?v=' + v;
+        images.p3.src = GITHUB_BASE + 'parallax/layer3_mid.png?v=' + v;
+        images.p4.src = GITHUB_BASE + 'parallax/layer4_far.png?v=' + v;
+        images.tiles.src = GITHUB_BASE + 'tilesets/tileset_vegueta.png?v=' + v;
 
         Object.values(images).forEach(img => img.onload = checkImagesLoaded);
 
@@ -151,7 +153,7 @@
         let thrownPotatoes = [];
         let dogFleeing = false;
         let dogFleeTimer = 0;
-        let dogXPos = 800;
+        let dogXPos = 900;
 
         function updateUI() {
             scoreEl.innerText = score;
@@ -169,6 +171,7 @@
             ammo = 5;
             score = 0;
             currentPhase = 1;
+            dogXPos = 900;
             updateUI();
             animate();
         }
@@ -201,7 +204,7 @@
                 ctx.drawImage(images.tiles, 256, 30, 256, 226, (i * 256) + (scrollX % 256), 600, 256, 226);
             }
 
-            const frame = Math.floor(frameCount / 6) % 4;
+            const frame = Math.floor(frameCount / 4) % 4;
             const spriteW = 256;
             const spriteH = 256;
             const crop = 4;
@@ -220,13 +223,15 @@
             ctx.drawImage(images.hero, (frame * spriteW) + crop, actionY + crop, spriteW - (crop * 2), spriteH - (crop * 2), 150 + shakeX, playerY, 180, 180);
             ctx.restore();
 
+            // 4. Enemies Logic
             if (!dogFleeing) {
-                dogXPos = 800 - ((Math.abs(scrollX) * 1.2) % 1600); 
+                dogXPos -= 5; 
+                if (dogXPos < -150) dogXPos = 900 + Math.random() * 600;
             } else {
                 dogXPos += 15;
                 if (dogXPos > 1000) {
                     dogFleeing = false;
-                    dogXPos = -200;
+                    dogXPos = 900 + Math.random() * 600;
                 }
             }
 
@@ -237,10 +242,15 @@
             ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 90, 90);
             ctx.restore();
 
-            let pigeonX = 800 - ((Math.abs(scrollX) * 1.6) % 1800);
-            let pigeonY = 150 + Math.sin(frameCount * 0.1) * 60;
+            // Pigeon Logic (Independiente)
+            pigeonXPos -= 6;
+            if (pigeonXPos < -100) {
+                pigeonXPos = 1000 + Math.random() * 1000;
+                pigeonYPos = 100 + Math.random() * 200;
+            }
+            let pigeonOsc = Math.sin(frameCount * 0.1) * 30;
             ctx.save();
-            ctx.translate(pigeonX + 80, pigeonY);
+            ctx.translate(pigeonXPos + 80, pigeonYPos + pigeonOsc);
             ctx.scale(-1, 1);
             ctx.drawImage(images.pigeon, (frame * spriteW) + crop, 0 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 80, 80);
             ctx.restore();
@@ -270,7 +280,7 @@
 
             const pHit = { x: 190, y: playerY + 30, w: 80, h: 120 };
             const dHit = { x: dogXPos + 15, y: 450, w: 60, h: 60 };
-            const piHit = { x: pigeonX + 10, y: pigeonY + 10, w: 60, h: 40 };
+            const piHit = { x: pigeonXPos + 10, y: pigeonYPos + pigeonOsc + 10, w: 60, h: 40 };
 
             if (invulnerableFrames === 0 && ((!dogFleeing && checkCollision(pHit, dHit)) || checkCollision(pHit, piHit))) {
                 takeDamage();
