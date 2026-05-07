@@ -41,9 +41,27 @@ Antes de escribir una sola línea de código, **DEBES** analizar los siguientes 
 - Usa cajas de colisión (AABB) optimizadas para el rendimiento.
 
 ### 5. Comportamiento de Enemigos y Obstáculos
-- **Dirección Opuesta**: Por estándar, los enemigos (oponentes) y obstáculos dinámicos deben aparecer desde el lado derecho del canvas y desplazarse hacia la izquierda (dirección opuesta al avance del protagonista).
+- **Dirección Opuesta**: Por estándar, los enemigos y obstáculos dinámicos deben aparecer desde el lado derecho del canvas y desplazarse hacia la izquierda (dirección opuesta al avance del protagonista).
 - **Lógica de Esquivado**: El motor debe implementar áreas de colisión que obliguen al jugador a saltar (jump) o deslizarse (slide) según la altura del enemigo.
-- **Spawning Aleatorio**: Implementar un sistema básico de generación de enemigos con intervalos de tiempo o distancia aleatorios para mantener el desafío.
+- **Spawning Matemático y Visibilidad**: Para evitar el bug del "enemigo invisible", asegúrate de que la fórmula de ciclo (ej. `(scrollX * speed) % distance`) cubra el ancho total del canvas de modo que el enemigo cruce la pantalla de lado a lado antes de reaparecer.
+- **Renderizado Espejo (Flip) Correcto**: Al voltear sprites horizontales para que miren al jugador, NUNCA uses escalados sin compensar la anchura. **Regla de oro para el flip**:
+  ```javascript
+  ctx.save();
+  ctx.translate(enemyX + spriteWidth, enemyY); // Trasladar sumando el ancho
+  ctx.scale(-1, 1); // Voltear
+  ctx.drawImage(img, cropX, cropY, width, height, 0, 0, width, height); // Dibujar en 0,0
+  ctx.restore();
+  ```
+
+### 6. Landing Page y Flujo de Inicio
+- **Pantalla de Inicio Obligatoria**: Antes de iniciar el Game Loop (luego del Preloader), el motor debe presentar una Landing Page o Start Screen.
+- **Contenido Requerido**: Esta pantalla DEBE incluir:
+  - Título del Juego.
+  - Sinopsis (1-2 líneas sobre la historia).
+  - Instrucciones de control (teclas, toques).
+  - Créditos (los mismos del portal principal del site).
+  - Imagen de portada (thumbnail) renderizada como fondo estático o con un ligero parallax de capa 4.
+- **Transición**: El juego solo comenzará tras una interacción explícita del jugador (botón "Jugar" o pulsar una tecla).
 
 ## Estructura Sugerida del Motor (`index.html`)
 ```javascript
