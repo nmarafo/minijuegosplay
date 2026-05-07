@@ -50,8 +50,10 @@ Este prompt generará las filas 5 a 8 del set de animaciones:
 
 ## Entrega Final y Almacenamiento
 Para mantener la organización del repositorio, el diseñador debe:
-1. **Post-procesamiento**: Detectar automáticamente el color de fondo predominante y eliminarlo para convertirlo en transparencia (Alpha Channel).
-2. **Documentación Técnica**: Generar un archivo `animations_guide.md` (o `.json`) que describa la cuadrícula (**4x4**) y mapee cada fila con su acción correspondiente para facilitar la implementación en el motor.
+1. **Respaldo de Seguridad (CRÍTICO)**: Antes de aplicar cualquier proceso de eliminación de fondo, **DEBES** crear una copia del archivo original (ej: `[nombre]_original.png`). Esto permite restaurar el activo si el proceso de transparencia elimina colores legítimos del personaje.
+2. **Post-procesamiento**: Detectar el color de fondo y convertirlo en transparencia. Si el resultado daña al personaje, se debe ajustar la tolerancia del script o usar un color de chroma diferente en una nueva generación.
+3. **Limpieza Final**: Una vez que el usuario valide que la transparencia es perfecta, se puede proceder a eliminar los archivos `_original.png` para limpiar el repositorio.
+4. **Documentación Técnica**: Generar un archivo `animations_guide.md` que describa la cuadrícula (**4x4**) y mapee cada fila con su acción correspondiente.
 3. **Organización**: Los archivos generados deben almacenarse en la carpeta específica del minigame.
 4. **Ruta de Almacenamiento**: La ruta estándar debe ser `minigames/[nombre_del_minijuego]/assets/spritesheets/`.
 5. **Nomenclatura**:
