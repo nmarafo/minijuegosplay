@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v1.1 - Enemigos Dinámicos</title>
+    <title>Vegueta Dash v1.2 - Enemigos Dinámicos</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: none; }
@@ -124,22 +124,21 @@
             ctx.drawImage(images.hero, (frame * spriteW) + crop, actionY + crop, spriteW - (crop * 2), spriteH - (crop * 2), 150, playerY, 180, 180);
 
             // 4. Enemies & Opponents (Moving Right to Left)
-            // Relative speed = Player Speed (5) + Enemy Speed
-            let dogX = 1500 - ((scrollX * 2.0) % 2500); 
+            // Hacemos que aparezcan mucho más rápido para asegurar que son visibles.
+            let dogX = 800 - ((scrollX * 3.0) % 1600); 
             ctx.save();
-            ctx.translate(dogX, 370);
-            ctx.scale(-1, 1);
-            // Draw flipped (offset by width to keep in view)
-            ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), -150, 0, 150, 150);
+            ctx.translate(dogX + 150, 370); // Trasladamos al borde derecho del sprite
+            ctx.scale(-1, 1); // Volteamos horizontalmente
+            ctx.drawImage(images.dog, (frame * spriteW) + crop, 512 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 150, 150);
             ctx.restore();
 
-            // Pigeon - Aerial Opponent (Faster)
-            let pigeonX = 2000 - ((scrollX * 3.0) % 3500);
-            let pigeonY = 150 + Math.sin(frameCount * 0.08) * 60;
+            // Pigeon - Aerial Opponent (Aparece más frecuente)
+            let pigeonX = 800 - ((scrollX * 4.0) % 1800);
+            let pigeonY = 150 + Math.sin(frameCount * 0.1) * 60;
             ctx.save();
-            ctx.translate(pigeonX, pigeonY);
+            ctx.translate(pigeonX + 100, pigeonY);
             ctx.scale(-1, 1);
-            ctx.drawImage(images.pigeon, (frame * spriteW) + crop, 0 + crop, spriteW - (crop * 2), spriteH - (crop * 2), -100, 0, 100, 100);
+            ctx.drawImage(images.pigeon, (frame * spriteW) + crop, 0 + crop, spriteW - (crop * 2), spriteH - (crop * 2), 0, 0, 100, 100);
             ctx.restore();
 
             // 4. Detail Parallax
