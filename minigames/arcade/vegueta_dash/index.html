@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Vegueta Dash v1.8 - Parallax Optimizado</title>
+    <title>Vegueta Dash v1.9 - Ajuste de Altura</title>
     <style>
         body { margin: 0; background: #1a1a1a; color: #fff; font-family: 'Outfit', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         canvas { background: #2c3e50; border: 6px solid #d4af37; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.9); cursor: default; }
@@ -228,8 +228,8 @@
                 takeDamage();
             }
 
-            // 6. Detail Parallax (Layer 1) - Ampliada un 30% para mayor profundidad
-            drawParallax(images.p1, 1.0, -100, 1.3);
+            // 6. Detail Parallax (Layer 1) - Subida (y=-220) y ampliada
+            drawParallax(images.p1, 1.0, -220, 1.3);
 
             // Physics
             if(isJumping) {
