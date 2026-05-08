@@ -36,9 +36,11 @@ Para cada fase narrativa, detallar:
 - Diseño de sonido/música.
 - Ritmo de juego y narrativa ambiental.
 - Diferencia entre cinemáticas y partes jugables.
+- **Fondos de Paralaje (Parallax)**: Definir conceptos visuales y atmosféricos diferenciados para el fondo de cada fase, reflejando el progreso del jugador en la historia.
 
 ### 4. Listado de Assets
-- **Tilesets**: Fondos, suelos y decoraciones con paleta de colores.
+- **Tilesets**: Suelos, plataformas y decoraciones con paleta de colores.
+- **Fondos Parallax**: Listar obligatoriamente la generación de múltiples escenarios paralaje (uno por cada fase principal), desglosando conceptualmente las 4 capas de cada uno.
 - **Sprite Sheets**: Personaje Principal y al menos 2 enemigos con animaciones (Idle, caminar, etc.).
 - **UI y VFX**: Botones y efectos visuales.
 
