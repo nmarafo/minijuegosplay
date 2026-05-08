@@ -50,8 +50,8 @@ Antes de escribir una sola línea de código, **DEBES** analizar los siguientes 
     - Restar una vida.
     - Activar un periodo de **Invulnerabilidad** (ej. 60 frames / 1 segundo).
     - **Animación de Impacto**: Además del flicker/shake, el motor DEBE cambiar la fila del spritesheet a la animación de **'Hurt'** (Daño). Si no existe una fila específica de daño, se utilizará la de 'Idle' como fallback durante el estado de invulnerabilidad.
-    - **Requisito de Diseño**: Se establece que los futuros spritesheets generados por la IA deben incluir una fila dedicada a la animación de 'Daño' (Hurt) para feedback visual máximo.
-  - **GameOver**: Solo se regresa a la `Start Screen` cuando el contador de vidas llegue a cero.
+    - **Hit Stop (Congelación Momentánea)**: El motor DEBE detener el flujo del juego (update y draw) durante un breve periodo (ej. 10-20 frames) inmediatamente después de un impacto. Esto enfatiza la gravedad del daño, crea un efecto cinematográfico y otorga al jugador un instante de calma para reorientarse.
+    - **GameOver**: Solo se regresa a la `Start Screen` cuando el contador de vidas llegue a cero.
 - **Equilibrio de Velocidad (Playability)**: Las velocidades de los enemigos deben ser testeadas para permitir un tiempo de reacción humano (ej. no superar los 10px por frame en condiciones normales).
 - **Spawning Matemático y Visibilidad**: Para evitar el bug del "enemigo invisible", asegúrate de que la fórmula de ciclo (ej. `(scrollX * speed) % distance`) cubra el ancho total del canvas de modo que el enemigo cruce la pantalla de lado a lado antes de reaparecer.
   - **Importante**: Si el sistema utiliza un `scrollX` que decrementa (valores negativos), utiliza siempre `Math.abs(scrollX)` dentro de la operación de módulo. De lo contrario, el resultado será negativo y el enemigo se desplazará infinitamente hacia la derecha fuera del canvas.
