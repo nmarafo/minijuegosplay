@@ -21,6 +21,14 @@
       "category": "arcade",
       "thumbnail": "assets/thumbnails/vegueta_dash.png",
       "path": "../minigames/arcade/vegueta_dash/index.html"
+    },
+    {
+      "id": "canarias_run",
+      "title": "Canarias Run",
+      "description": "¡Recupera el timple sagrado en este especial del Día de Canarias!",
+      "category": "arcade",
+      "thumbnail": "../minigames/arcade/canarias_run/assets/parallax/vegueta/layer2_foreground.png",
+      "path": "../minigames/arcade/canarias_run/index.html"
     }
   ]
 }

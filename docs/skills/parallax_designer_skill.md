@@ -45,15 +45,16 @@ Una vez recibida la información, genera una propuesta detallada dividida en al 
 
 ## Entrega y Almacenamiento
 Para mantener la organización del repositorio, el diseñador debe:
-1.  **Post-procesamiento**: Detectar automáticamente el color de chroma key (`#00FF00`) y convertirlo en transparencia (canal Alfa) para asegurar que las capas sean utilizables directamente en el motor.
-2.  **Organización**: Los archivos generados deben almacenarse en la carpeta específica del minigame.
-3.  **Ruta de Almacenamiento**: La ruta estándar debe ser `minigames/[categoria]/[nombre_del_minijuego]/assets/parallax/[fase]/`.
-4.  **Nomenclatura**:
+1.  **Respaldo de Seguridad (CRÍTICO)**: Antes de aplicar cualquier proceso de eliminación de fondo, **DEBES** crear una copia de cada archivo original generado (ej: `layer1_detail_original.png`). Esto permite restaurar las imágenes si el proceso de transparencia elimina colores legítimos del arte.
+2.  **Post-procesamiento**: Detectar automáticamente el color de chroma key (`#00FF00` o `#FF00FF`) y convertirlo en transparencia (canal Alfa) para asegurar que las capas sean utilizables directamente en el motor. Una vez validada la transparencia por el usuario, se pueden eliminar los archivos `_original.png`.
+3.  **Organización**: Los archivos generados deben almacenarse en la carpeta específica del minigame.
+4.  **Ruta de Almacenamiento**: La ruta estándar debe ser `minigames/[categoria]/[nombre_del_minijuego]/assets/parallax/[fase]/`.
+5.  **Nomenclatura**:
     *   `layer4_far.png`
     *   `layer3_mid.png`
     *   `layer2_foreground.png`
     *   `layer1_detail.png`
-5.  **Informe Técnico**: Generar un archivo `parallax_report.md` en la misma carpeta que describa cada capa, su contenido, sugerencia de velocidad de desplazamiento y guías de posicionamiento (alineación) considerando las áreas transparentes (superiores para Capas 1-3, ninguna para Capa 4).
+6.  **Informe Técnico**: Generar un archivo `parallax_report.md` en la misma carpeta que describa cada capa, su contenido, sugerencia de velocidad de desplazamiento y guías de posicionamiento (alineación) considerando las áreas transparentes (superiores para Capas 1-3, ninguna para Capa 4).
 
 ## Tono General
 *   Profesional, creativo y altamente técnico.

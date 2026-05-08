@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canarias Run - Especial Día de Canarias</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #0055ff;
+            --accent: #ff4400;
+            --text: #ffffff;
+            --bg: #1a1a1a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 450px;
+            background: #000;
+            border: 4px solid var(--primary);
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            pointer-events: auto;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #loading-screen { z-index: 20; background: var(--bg); }
+        #start-screen { z-index: 15; }
+        #gameover-screen { z-index: 12; display: none; }
+
+        h1 { margin: 0 0 10px; color: var(--primary); font-size: 3rem; text-shadow: 2px 2px #000; }
+        p { margin: 0 0 20px; font-size: 1.1rem; max-width: 500px; }
+        
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.5rem;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--primary); }
+
+        .loader-bar {
+            width: 300px;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        #loader-progress {
+            width: 0%;
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.1s;
+        }
+
+        #hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px #000;
+        }
+
+        .lives { color: var(--accent); }
+        .score { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="450"></canvas>
+        
+        <div id="ui-layer">
+            <!-- Loading Screen -->
+            <div id="loading-screen" class="screen">
+                <h1>CARGANDO...</h1>
+                <div class="loader-bar"><div id="loader-progress"></div></div>
+                <p style="margin-top: 10px;">Preparando el Paseo por Las Palmas...</p>
+            </div>
+
+            <!-- Start Screen -->
+            <div id="start-screen" class="screen" style="display: none;">
+                <h1>CANARIAS RUN</h1>
+                <p>¡El timple sagrado ha desaparecido! Recórrete las calles de Las Palmas de Gran Canaria y recupéralo para el gran baile final.</p>
+                <p><strong>Controles:</strong> Espacio / Clic para Saltar</p>
+                <button class="btn" onclick="startGame()">¡A JUGAR!</button>
+                <p style="font-size: 0.8rem; margin-top: 20px; opacity: 0.7;">© 2026 MinijuegosPlay | Especial Día de Canarias</p>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="gameover-screen" class="screen">
+                <h1>GAME OVER</h1>
+                <p id="final-score">Puntuación: 0</p>
+                <button class="btn" onclick="resetGame()">REINTENTAR</button>
+            </div>
+
+            <!-- HUD -->
+            <div id="hud">
+                <div class="lives">❤❤❤</div>
+                <div class="score">0m</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * CANARIAS RUN - Engine Architect Implementation
+         * Based on: GDD.md, animations_guide.md, parallax_report.md, tileset_metadata.md
+         */
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const REPO_BASE = 'https://raw.githubusercontent.com/nmarafo/minijuegosplay/main/minigames/arcade/canarias_run/assets/';
+        
+        // --- ASSETS CONFIG ---
+        const ASSETS_MANIFEST = {
+            player1: REPO_BASE + 'spritesheets/ayoze_fase1.png',
+            player2: REPO_BASE + 'spritesheets/ayoze_fase2.png',
+            enemies: REPO_BASE + 'spritesheets/enemies_fase1.png',
+            tileset: REPO_BASE + 'tilesets/tileset_canarias_run.png',
+            // Parallax Vegueta
+            p1_l4: REPO_BASE + 'parallax/vegueta/layer4_far.png',
+            p1_l3: REPO_BASE + 'parallax/vegueta/layer3_mid.png',
+            p1_l2: REPO_BASE + 'parallax/vegueta/layer2_foreground.png',
+            p1_l1: REPO_BASE + 'parallax/vegueta/layer1_detail.png'
+        };
+
+        const images = {};
+        let loadedCount = 0;
+        const totalAssets = Object.keys(ASSETS_MANIFEST).length;
+
+        // --- GAME CONSTANTS ---
+        const GRAVITY = 0.6;
+        const JUMP_FORCE = -14;
+        const GROUND_Y = 380;
+        const FRAME_SIZE = 256;
+        const SPRITE_DISPLAY_SIZE = 120;
+        const HITBOX_PADDING = 30;
+
+        // --- GAME STATE ---
+        let gameState = 'loading'; // loading, start, playing, gameover
+        let score = 0;
+        let lives = 3;
+        let gameSpeed = 5;
+        let invulnerable = 0;
+        let scrollX = 0;
+        let enemies = [];
+        let spawnTimer = 0;
+        let hitStop = 0;
+
+        // --- PRELOADER ---
+        function preload() {
+            for (let key in ASSETS_MANIFEST) {
+                const img = new Image();
+                img.src = ASSETS_MANIFEST[key];
+                img.onload = () => {
+                    loadedCount++;
+                    const progress = (loadedCount / totalAssets) * 100;
+                    document.getElementById('loader-progress').style.width = progress + '%';
+                    if (loadedCount === totalAssets) {
+                        setTimeout(() => {
+                            document.getElementById('loading-screen').style.display = 'none';
+                            document.getElementById('start-screen').style.display = 'flex';
+                            gameState = 'start';
+                        }, 500);
+                    }
+                };
+                images[key] = img;
+            }
+        }
+
+        // --- CLASSES ---
+        class Player {
+            constructor() {
+                this.x = 100;
+                this.y = GROUND_Y - SPRITE_DISPLAY_SIZE;
+                this.vy = 0;
+                this.isJumping = false;
+                this.animFrame = 0;
+                this.animTimer = 0;
+                this.action = 'run'; // idle, walk, run, jump, hurt
+            }
+
+            update() {
+                if (hitStop > 0) return;
+
+                // Physics
+                this.vy += GRAVITY;
+                this.y += this.vy;
+
+                if (this.y > GROUND_Y - SPRITE_DISPLAY_SIZE) {
+                    this.y = GROUND_Y - SPRITE_DISPLAY_SIZE;
+                    this.vy = 0;
+                    this.isJumping = false;
+                }
+
+                // Animation
+                this.animTimer++;
+                if (this.animTimer > 5) {
+                    this.animFrame = (this.animFrame + 1) % 4;
+                    this.animTimer = 0;
+                }
+
+                // Action Determination
+                if (invulnerable > 0) {
+                    this.action = 'hurt';
+                } else if (this.isJumping) {
+                    this.action = 'jump';
+                } else {
+                    this.action = 'run';
+                }
+            }
+
+            draw() {
+                let row = 1;
+                let sheet = images.player1;
+
+                switch(this.action) {
+                    case 'run': row = 3; break;
+                    case 'jump': row = 4; break;
+                    case 'hurt': row = 2; sheet = images.player2; break;
+                }
+
+                const sx = this.animFrame * FRAME_SIZE;
+                const sy = (row - 1) * FRAME_SIZE;
+
+                if (invulnerable % 10 < 5) { // Flicker effect
+                    ctx.drawImage(sheet, sx + 2, sy + 2, FRAME_SIZE - 4, FRAME_SIZE - 4, 
+                                  this.x, this.y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE);
+                }
+            }
+
+            jump() {
+                if (!this.isJumping) {
+                    this.vy = JUMP_FORCE;
+                    this.isJumping = true;
+                    this.action = 'jump';
+                }
+            }
+        }
+
+        class Enemy {
+            constructor() {
+                this.type = Math.floor(Math.random() * 4); // 0: Paloma, 1: Turista, 2: Guagua, 3: Cangrejo
+                this.width = 80;
+                this.height = 80;
+                this.x = canvas.width + 100;
+                this.y = (this.type === 0) ? GROUND_Y - 180 : GROUND_Y - this.height; // Paloma flies
+                this.speed = gameSpeed + (Math.random() * 2);
+                this.animFrame = 0;
+                this.animTimer = 0;
+            }
+
+            update() {
+                if (hitStop > 0) return;
+                this.x -= this.speed;
+
+                this.animTimer++;
+                if (this.animTimer > 8) {
+                    this.animFrame = (this.animFrame + 1) % 4;
+                    this.animTimer = 0;
+                }
+            }
+
+            draw() {
+                const sx = this.animFrame * FRAME_SIZE;
+                const sy = this.type * FRAME_SIZE;
+
+                // Flip enemies to face player
+                ctx.save();
+                ctx.translate(this.x + this.width, this.y);
+                ctx.scale(-1, 1);
+                ctx.drawImage(images.enemies, sx, sy, FRAME_SIZE, FRAME_SIZE, 
+                              0, 0, this.width, this.height);
+                ctx.restore();
+            }
+        }
+
+        const player = new Player();
+
+        // --- ENGINE FUNCTIONS ---
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            gameState = 'playing';
+            resetGameState();
+        }
+
+        function resetGameState() {
+            score = 0;
+            lives = 3;
+            enemies = [];
+            gameSpeed = 6;
+            invulnerable = 0;
+            scrollX = 0;
+            updateHUD();
+        }
+
+        function resetGame() {
+            document.getElementById('gameover-screen').style.display = 'none';
+            startGame();
+        }
+
+        function gameOver() {
+            gameState = 'gameover';
+            document.getElementById('gameover-screen').style.display = 'flex';
+            document.getElementById('final-score').innerText = `Puntuación: ${Math.floor(score)}m`;
+        }
+
+        function updateHUD() {
+            document.querySelector('.lives').innerText = '❤'.repeat(lives);
+            document.querySelector('.score').innerText = Math.floor(score) + 'm';
+        }
+
+        function handleCollision(enemy) {
+            if (invulnerable > 0) return;
+
+            lives--;
+            invulnerable = 100;
+            hitStop = 20; // Hit stop effect
+            updateHUD();
+
+            if (lives <= 0) {
+                gameOver();
+            }
+        }
+
+        function drawParallaxLayer(img, speed, yPos = 0, anchor = 'bottom') {
+            const x = (-(scrollX * speed) % canvas.width);
+            const drawY = (anchor === 'bottom') ? canvas.height - canvas.width * (img.height/img.width) + yPos : yPos;
+            const drawHeight = canvas.width * (img.height/img.width);
+
+            ctx.drawImage(img, x, drawY, canvas.width, drawHeight);
+            ctx.drawImage(img, x + canvas.width, drawY, canvas.width, drawHeight);
+        }
+
+        function drawTiles() {
+            const tileSize = 80;
+            const x = (-(scrollX * 1.0) % tileSize);
+            for (let i = -1; i <= Math.ceil(canvas.width / tileSize); i++) {
+                // Draw Adoquines (1,1) from tileset
+                ctx.drawImage(images.tileset, 0, 0, FRAME_SIZE, FRAME_SIZE, 
+                              x + (i * tileSize), GROUND_Y, tileSize, tileSize);
+            }
+        }
+
+        // --- MAIN LOOP ---
+        function update() {
+            if (gameState !== 'playing') return;
+
+            if (hitStop > 0) {
+                hitStop--;
+                return;
+            }
+
+            scrollX += gameSpeed;
+            score += 0.1;
+            if (invulnerable > 0) invulnerable--;
+
+            player.update();
+
+            // Spawning
+            spawnTimer++;
+            if (spawnTimer > 100 - (gameSpeed * 5)) {
+                enemies.push(new Enemy());
+                spawnTimer = 0;
+            }
+
+            // Enemies Update & Collision
+            enemies.forEach((enemy, index) => {
+                enemy.update();
+
+                // Simple AABB Collision
+                if (player.x + HITBOX_PADDING < enemy.x + enemy.width - HITBOX_PADDING &&
+                    player.x + SPRITE_DISPLAY_SIZE - HITBOX_PADDING > enemy.x + HITBOX_PADDING &&
+                    player.y + HITBOX_PADDING < enemy.y + enemy.height - HITBOX_PADDING &&
+                    player.y + SPRITE_DISPLAY_SIZE - HITBOX_PADDING > enemy.y + HITBOX_PADDING) {
+                    handleCollision(enemy);
+                }
+
+                if (enemy.x < -200) enemies.splice(index, 1);
+            });
+
+            if (score > 0 && Math.floor(score) % 100 === 0) gameSpeed += 0.005;
+            updateHUD();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (gameState === 'loading') return;
+
+            // Parallax Vegueta
+            drawParallaxLayer(images.p1_l4, 0.05, 0, 'top');
+            drawParallaxLayer(images.p1_l3, 0.2, 50);
+            drawParallaxLayer(images.p1_l2, 0.5, 0);
+            
+            // Ground
+            drawTiles();
+
+            // Entities
+            enemies.forEach(e => e.draw());
+            player.draw();
+
+            // Foreground Parallax
+            drawParallaxLayer(images.p1_l1, 1.5, 0);
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        // --- INPUTS ---
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') player.jump();
+        });
+        canvas.addEventListener('mousedown', () => {
+            if (gameState === 'playing') player.jump();
+        });
+
+        // Initialize
+        preload();
+        loop();
+
+    </script>
+</body>
+</html>
