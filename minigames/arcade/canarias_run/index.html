@@ -219,7 +219,7 @@
         let gameState = 'loading'; // loading, start, playing, gameover
         let score = 0;
         let lives = 3;
-        let gameSpeed = 4;
+        let gameSpeed = 3;
         let invulnerable = 0;
         let scrollX = 0;
         let enemies = [];
@@ -376,7 +376,7 @@
             score = 0;
             lives = 3;
             enemies = [];
-            gameSpeed = 4;
+            gameSpeed = 3;
             invulnerable = 0;
             scrollX = 0;
             currentPhase = 'vegueta';
@@ -412,13 +412,17 @@
             }
         }
 
-        function drawParallaxLayer(img, speed, yPos = 0, anchor = 'bottom') {
-            const x = (-(scrollX * speed) % canvas.width);
-            const drawY = (anchor === 'bottom') ? canvas.height - canvas.width * (img.height/img.width) + yPos : yPos;
-            const drawHeight = canvas.width * (img.height/img.width);
+        function drawParallaxLayer(img, speed, yPos = 0, anchor = 'bottom', alpha = 1, scale = 1) {
+            const drawWidth = canvas.width * scale;
+            const x = (-(scrollX * speed) % drawWidth);
+            const drawHeight = drawWidth * (img.height/img.width);
+            const drawY = (anchor === 'bottom') ? canvas.height - drawHeight + yPos : yPos;
 
-            ctx.drawImage(img, x, drawY, canvas.width, drawHeight);
-            ctx.drawImage(img, x + canvas.width, drawY, canvas.width, drawHeight);
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.drawImage(img, x, drawY, drawWidth, drawHeight);
+            ctx.drawImage(img, x + drawWidth, drawY, drawWidth, drawHeight);
+            ctx.restore();
         }
 
         function drawTiles() {
@@ -496,14 +500,15 @@
 
             drawParallaxLayer(l4, 0.05, 0, 'top');
             drawParallaxLayer(l3, 0.2, 50);
-            drawParallaxLayer(l2, 0.5, 0);
+            drawParallaxLayer(l2, 0.5, 30); // Lowered layer 2
             
             drawTiles();
 
             enemies.forEach(e => e.draw());
             player.draw();
 
-            drawParallaxLayer(l1, 1.5, 0);
+            // Layer 1: Enlarge and semi-transparent
+            drawParallaxLayer(l1, 1.5, 20, 'bottom', 0.6, 1.2);
         }
 
         function loop() {
