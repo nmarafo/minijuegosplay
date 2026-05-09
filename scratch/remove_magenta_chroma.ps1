@@ -27,9 +27,8 @@ foreach ($file in $files) {
         for ($x = 0; $x -lt $width; $x++) {
             $color = $bmp.GetPixel($x, $y)
             
-            # Condition for "Magenta": R and B are high, G is low
-            # Using a tolerance to catch near-magenta colors
-            if ($color.R -gt 130 -and $color.B -gt 130 -and $color.G -lt 100) {
+            # Condition for "Magenta/Pink": R and B are significantly higher than G
+            if ($color.R -gt ($color.G + 40) -and $color.B -gt ($color.G + 40)) {
                 $bmp.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, 0, 0, 0))
             }
         }
@@ -41,7 +40,7 @@ foreach ($file in $files) {
     $bmp.Dispose()
     
     Remove-Item $fullPath
-    Rename-Item $tempPath $file.Name
+    Move-Item $tempPath $fullPath
 }
 
 Write-Host "Done!"
