@@ -213,7 +213,7 @@
         let gameState = 'loading'; // loading, start, playing, gameover
         let score = 0;
         let lives = 3;
-        let gameSpeed = 6;
+        let gameSpeed = 4;
         let invulnerable = 0;
         let scrollX = 0;
         let enemies = [];
@@ -370,7 +370,7 @@
             score = 0;
             lives = 3;
             enemies = [];
-            gameSpeed = 6;
+            gameSpeed = 4;
             invulnerable = 0;
             scrollX = 0;
             currentPhase = 'vegueta';
@@ -469,7 +469,7 @@
                 if (enemy.x < -200) enemies.splice(index, 1);
             });
 
-            if (score > 0 && Math.floor(score) % 50 === 0) gameSpeed += 0.002;
+            if (score > 0 && Math.floor(score) % 50 === 0) gameSpeed += 0.001;
             updateHUD();
         }
 
