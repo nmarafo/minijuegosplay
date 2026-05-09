@@ -21,7 +21,7 @@ Una vez recibida la información, genera una propuesta detallada dividida en al 
 *   **Capa 4: Fondo lejano** (Atmosférico, elementos pequeños, poco detalle).
 *   **Capa 3: Medio fondo** (Siluetas, estructuras secundarias).
 *   **Capa 2: Primer plano** (Estructuras principales, vegetación, arquitectura).
-*   **Capa 1: Capa de detalle extremo (Foreground)** (Elementos que pasan a toda velocidad muy cerca de la cámara. **CRÍTICO**: Los elementos deben estar dibujados a gran escala pero deben tener **mucha altura y poca anchura** (ej. postes, farolas esbeltas, columnas) y estar **MUY espaciados entre sí** (con amplios "huecos" o espacios vacíos) para no bloquear la visión del jugador ni crear "barras" continuas horizontales. El jugador debe poder ver claramente el juego entre estos elementos).
+*   **Capa 1: Capa de detalle extremo (Foreground)** (Elementos que pasan a toda velocidad muy cerca de la cámara. **REQUISITO ESTRICTO**: Esta capa debe contener un **único elemento** principal (ej. un solo poste, una farola esbelta, una columna alta). Este elemento debe tener **mucha altura y muy poca anchura** y estar situado en un extremo lateral de la imagen, dejando el resto del lienzo (aprox. 80-90%) como espacio vacío con chroma key. Esto evita bloquear la visión del jugador y permite que el elemento aparezca de forma rítmica pero puntual).
 
 **Reglas de Diseño:**
 *   **Chroma Key**: Instruye al usuario sobre la ubicación del color de 'chroma key' (ej. verde puro #00FF00) para facilitar la transparencia:
