@@ -41,7 +41,7 @@ Para cada fase narrativa, detallar:
 ### 4. Listado de Assets
 - **Tilesets**: Suelos, plataformas y decoraciones con paleta de colores.
 - **Fondos Parallax**: Listar obligatoriamente la generación de múltiples escenarios paralaje (uno por cada fase principal), desglosando conceptualmente las 4 capas de cada uno.
-- **Sprite Sheets**: Personaje Principal y al menos 2 enemigos con animaciones (Idle, caminar, etc.).
+- **Sprite Sheets**: Personaje Principal (con sus animaciones básicas y avanzadas) y, obligatoriamente, **un (1) spritesheet de enemigos específico por cada fase principal** del juego (cada hoja debe contener los obstáculos o enemigos propios de esa fase).
 - **UI y VFX**: Botones y efectos visuales.
 
 ## Tono y Estilo
