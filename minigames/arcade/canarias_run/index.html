@@ -500,15 +500,15 @@
 
             drawParallaxLayer(l4, 0.05, 0, 'top');
             drawParallaxLayer(l3, 0.2, 50);
-            drawParallaxLayer(l2, 0.5, 30); // Lowered layer 2
+            drawParallaxLayer(l2, 0.5, 80); // Lowered much more
             
             drawTiles();
 
             enemies.forEach(e => e.draw());
             player.draw();
 
-            // Layer 1: Enlarge and semi-transparent
-            drawParallaxLayer(l1, 1.5, 20, 'bottom', 0.6, 1.2);
+            // Layer 1: Enlarge even more and semi-transparent
+            drawParallaxLayer(l1, 1.5, 40, 'bottom', 0.6, 1.5);
         }
 
         function loop() {
