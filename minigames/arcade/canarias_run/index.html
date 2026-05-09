@@ -225,7 +225,7 @@
         function preload() {
             for (let key in ASSETS_MANIFEST) {
                 const img = new Image();
-                img.src = ASSETS_MANIFEST[key];
+                img.src = ASSETS_MANIFEST[key] + '?t=' + Date.now();
                 img.onload = () => {
                     loadedCount++;
                     const progress = (loadedCount / totalAssets) * 100;
