@@ -46,7 +46,7 @@ Una vez recibida la información, genera una propuesta detallada dividida en al 
 ## Entrega y Almacenamiento
 Para mantener la organización del repositorio, el diseñador debe:
 1.  **Respaldo de Seguridad (CRÍTICO)**: Antes de aplicar cualquier proceso de eliminación de fondo, **DEBES** crear una copia de cada archivo original generado (ej: `layer1_detail_original.png`). Esto permite restaurar las imágenes si el proceso de transparencia elimina colores legítimos del arte.
-2.  **Post-procesamiento**: Detectar automáticamente el color de chroma key (`#00FF00` o `#FF00FF`) y convertirlo en transparencia (canal Alfa) para asegurar que las capas sean utilizables directamente en el motor. Una vez validada la transparencia por el usuario, se pueden eliminar los archivos `_original.png`.
+2.  **Post-procesamiento**: Detectar automáticamente el color de chroma key (`#00FF00` o `#FF00FF`) y convertirlo en transparencia (canal Alfa) para asegurar que las capas sean utilizables directamente en el motor. **CRÍTICO**: Este proceso solo se aplica a las Capas 1, 2 y 3. **NO se debe aplicar ninguna transparencia ni eliminación de fondo a la Capa 4** (`layer4_far.png`), ya que debe permanecer 100% opaca como fondo absoluto. Una vez validada la transparencia por el usuario, se pueden eliminar los archivos `_original.png`.
 3.  **Organización**: Los archivos generados deben almacenarse en la carpeta específica del minigame.
 4.  **Ruta de Almacenamiento**: La ruta estándar debe ser `minigames/[categoria]/[nombre_del_minijuego]/assets/parallax/[fase]/`.
 5.  **Nomenclatura**:

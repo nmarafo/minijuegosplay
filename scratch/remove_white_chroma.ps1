@@ -10,6 +10,12 @@ foreach ($file in $files) {
     Write-Host "Processing $($file.Name) (White Chroma Removal)..."
     $fullPath = $file.FullName
     
+    # Skip layer4 (far background) as it should be 100% opaque
+    if ($file.Name -match "layer4") {
+        Write-Host "Skipping $($file.Name) (Layer 4 must remain opaque)..."
+        continue
+    }
+
     # Load image
     $original = [System.Drawing.Bitmap]::FromFile($fullPath)
     $width = $original.Width
