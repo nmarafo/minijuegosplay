@@ -68,10 +68,12 @@
 ### Sprite Sheets (4x4 Grid)
 1. **Protagonista**: "Ayoze" (Chico con traje de mago canario) o "Naira" (Chica con traje de maga).
     - Animaciones: Idle, Run, Jump, Fall.
-2. **Enemigo 1**: "Paloma de Parque" (Obstáculo volador).
-    - Animaciones: Vuelo, Ataque (picotazo).
-3. **Enemigo 2**: "Guagua despistada" o "Turista con prisa".
-    - Animaciones: Movimiento lateral, Reacción al golpe.
+2. **Enemigos Fase 1 (Vegueta)**:
+    - Paloma de Parque, Turista con cámara, Vendedor ambulante, Gato callejero.
+3. **Enemigos Fase 2 (Puerto)**:
+    - Guagua local, Carretilla elevadora, Marinero con prisa, Gaviota.
+4. **Enemigos Fase 3 (Las Canteras)**:
+    - Cangrejo de roca, Surfista, Pelota de playa rebotando, Medusa (obstáculo).
 
 ### UI y VFX
 - **UI**: Botones con estilo rústico/madera, barra de energía (icono de plátano).

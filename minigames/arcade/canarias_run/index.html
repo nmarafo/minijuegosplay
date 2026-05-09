@@ -176,13 +176,25 @@
         const ASSETS_MANIFEST = {
             player1: REPO_BASE + 'spritesheets/ayoze_fase1.png',
             player2: REPO_BASE + 'spritesheets/ayoze_fase2.png',
-            enemies: REPO_BASE + 'spritesheets/enemies_fase1.png',
+            enemies_v: REPO_BASE + 'spritesheets/enemies_vegueta.png',
+            enemies_p: REPO_BASE + 'spritesheets/enemies_puerto.png',
+            enemies_c: REPO_BASE + 'spritesheets/enemies_canteras.png',
             tileset: REPO_BASE + 'tilesets/tileset_canarias_run.png',
             // Parallax Vegueta
-            p1_l4: REPO_BASE + 'parallax/vegueta/layer4_far.png',
-            p1_l3: REPO_BASE + 'parallax/vegueta/layer3_mid.png',
-            p1_l2: REPO_BASE + 'parallax/vegueta/layer2_foreground.png',
-            p1_l1: REPO_BASE + 'parallax/vegueta/layer1_detail.png'
+            v_l4: REPO_BASE + 'parallax/vegueta/layer4_far.png',
+            v_l3: REPO_BASE + 'parallax/vegueta/layer3_mid.png',
+            v_l2: REPO_BASE + 'parallax/vegueta/layer2_foreground.png',
+            v_l1: REPO_BASE + 'parallax/vegueta/layer1_detail.png',
+            // Parallax Puerto
+            p_l4: REPO_BASE + 'parallax/puerto/layer4_far.png',
+            p_l3: REPO_BASE + 'parallax/puerto/layer3_mid.png',
+            p_l2: REPO_BASE + 'parallax/puerto/layer2_foreground.png',
+            p_l1: REPO_BASE + 'parallax/puerto/layer1_detail.png',
+            // Parallax Canteras
+            c_l4: REPO_BASE + 'parallax/canteras/layer4_far.png',
+            c_l3: REPO_BASE + 'parallax/canteras/layer3_mid.png',
+            c_l2: REPO_BASE + 'parallax/canteras/layer2_foreground.png',
+            c_l1: REPO_BASE + 'parallax/canteras/layer1_detail.png'
         };
 
         const images = {};
@@ -201,12 +213,13 @@
         let gameState = 'loading'; // loading, start, playing, gameover
         let score = 0;
         let lives = 3;
-        let gameSpeed = 5;
+        let gameSpeed = 6;
         let invulnerable = 0;
         let scrollX = 0;
         let enemies = [];
         let spawnTimer = 0;
         let hitStop = 0;
+        let currentPhase = 'vegueta'; // vegueta, puerto, canteras
 
         // --- PRELOADER ---
         function preload() {
@@ -301,11 +314,18 @@
 
         class Enemy {
             constructor() {
-                this.type = Math.floor(Math.random() * 4); // 0: Paloma, 1: Turista, 2: Guagua, 3: Cangrejo
+                this.phase = currentPhase;
+                this.type = Math.floor(Math.random() * 4); 
                 this.width = 80;
                 this.height = 80;
                 this.x = canvas.width + 100;
-                this.y = (this.type === 0) ? GROUND_Y - 180 : GROUND_Y - this.height; // Paloma flies
+                
+                // Specific y-pos based on enemy type (e.g. flying)
+                const isFlying = (this.phase === 'vegueta' && this.type === 0) || 
+                                 (this.phase === 'puerto' && this.type === 3) ||
+                                 (this.phase === 'canteras' && this.type === 3);
+
+                this.y = isFlying ? GROUND_Y - 180 : GROUND_Y - this.height;
                 this.speed = gameSpeed + (Math.random() * 2);
                 this.animFrame = 0;
                 this.animTimer = 0;
@@ -325,13 +345,14 @@
             draw() {
                 const sx = this.animFrame * FRAME_SIZE;
                 const sy = this.type * FRAME_SIZE;
+                let sheet = images.enemies_v;
+                if (this.phase === 'puerto') sheet = images.enemies_p;
+                if (this.phase === 'canteras') sheet = images.enemies_c;
 
-                // Flip enemies to face player
                 ctx.save();
                 ctx.translate(this.x + this.width, this.y);
                 ctx.scale(-1, 1);
-                ctx.drawImage(images.enemies, sx, sy, FRAME_SIZE, FRAME_SIZE, 
-                              0, 0, this.width, this.height);
+                ctx.drawImage(sheet, sx, sy, FRAME_SIZE, FRAME_SIZE, 0, 0, this.width, this.height);
                 ctx.restore();
             }
         }
@@ -352,6 +373,7 @@
             gameSpeed = 6;
             invulnerable = 0;
             scrollX = 0;
+            currentPhase = 'vegueta';
             updateHUD();
         }
 
@@ -376,7 +398,7 @@
 
             lives--;
             invulnerable = 100;
-            hitStop = 20; // Hit stop effect
+            hitStop = 20; 
             updateHUD();
 
             if (lives <= 0) {
@@ -396,9 +418,12 @@
         function drawTiles() {
             const tileSize = 80;
             const x = (-(scrollX * 1.0) % tileSize);
+            let rowIdx = 0; // Vegueta adoquines
+            if (currentPhase === 'puerto') rowIdx = 1; // Asfalto
+            if (currentPhase === 'canteras') rowIdx = 2; // Arena
+
             for (let i = -1; i <= Math.ceil(canvas.width / tileSize); i++) {
-                // Draw Adoquines (1,1) from tileset
-                ctx.drawImage(images.tileset, 0, 0, FRAME_SIZE, FRAME_SIZE, 
+                ctx.drawImage(images.tileset, (rowIdx % 4) * FRAME_SIZE, 0, FRAME_SIZE, FRAME_SIZE, 
                               x + (i * tileSize), GROUND_Y, tileSize, tileSize);
             }
         }
@@ -416,6 +441,11 @@
             score += 0.1;
             if (invulnerable > 0) invulnerable--;
 
+            // Phase Switching
+            if (score < 100) currentPhase = 'vegueta';
+            else if (score < 200) currentPhase = 'puerto';
+            else currentPhase = 'canteras';
+
             player.update();
 
             // Spawning
@@ -429,7 +459,6 @@
             enemies.forEach((enemy, index) => {
                 enemy.update();
 
-                // Simple AABB Collision
                 if (player.x + HITBOX_PADDING < enemy.x + enemy.width - HITBOX_PADDING &&
                     player.x + SPRITE_DISPLAY_SIZE - HITBOX_PADDING > enemy.x + HITBOX_PADDING &&
                     player.y + HITBOX_PADDING < enemy.y + enemy.height - HITBOX_PADDING &&
@@ -440,7 +469,7 @@
                 if (enemy.x < -200) enemies.splice(index, 1);
             });
 
-            if (score > 0 && Math.floor(score) % 100 === 0) gameSpeed += 0.005;
+            if (score > 0 && Math.floor(score) % 50 === 0) gameSpeed += 0.002;
             updateHUD();
         }
 
@@ -449,20 +478,26 @@
 
             if (gameState === 'loading') return;
 
-            // Parallax Vegueta
-            drawParallaxLayer(images.p1_l4, 0.05, 0, 'top');
-            drawParallaxLayer(images.p1_l3, 0.2, 50);
-            drawParallaxLayer(images.p1_l2, 0.5, 0);
+            // Parallax selection based on phase
+            let l1, l2, l3, l4;
+            if (currentPhase === 'vegueta') {
+                l4 = images.v_l4; l3 = images.v_l3; l2 = images.v_l2; l1 = images.v_l1;
+            } else if (currentPhase === 'puerto') {
+                l4 = images.p_l4; l3 = images.p_l3; l2 = images.p_l2; l1 = images.p_l1;
+            } else {
+                l4 = images.c_l4; l3 = images.c_l3; l2 = images.c_l2; l1 = images.c_l1;
+            }
+
+            drawParallaxLayer(l4, 0.05, 0, 'top');
+            drawParallaxLayer(l3, 0.2, 50);
+            drawParallaxLayer(l2, 0.5, 0);
             
-            // Ground
             drawTiles();
 
-            // Entities
             enemies.forEach(e => e.draw());
             player.draw();
 
-            // Foreground Parallax
-            drawParallaxLayer(images.p1_l1, 1.5, 0);
+            drawParallaxLayer(l1, 1.5, 0);
         }
 
         function loop() {

@@ -32,15 +32,37 @@ Archivo: `assets/spritesheets/ayoze_fase2.png`
 
 ---
 
-## 2. Enemigos y Obstáculos
-Archivo: `assets/spritesheets/enemies_fase1.png`
+## 2. Enemigos por Fase
+
+### Fase 1: Vegueta
+Archivo: `assets/spritesheets/enemies_vegueta.png`
 
 | Fila | Entidad | Acción | Frames |
 | :--- | :--- | :--- | :--- |
 | 1 | **Paloma** | Vuelo | 4 |
 | 2 | **Turista** | Caminar | 4 |
-| 3 | **Guagua** | Movimiento | 4 |
-| 4 | **Cangrejo** | Movimiento lateral | 4 |
+| 3 | **Vendedor** | Moverse | 4 |
+| 4 | **Gato** | Correr | 4 |
+
+### Fase 2: Puerto
+Archivo: `assets/spritesheets/enemies_puerto.png`
+
+| Fila | Entidad | Acción | Frames |
+| :--- | :--- | :--- | :--- |
+| 1 | **Guagua** | Movimiento | 4 |
+| 2 | **Carretilla** | Movimiento | 4 |
+| 3 | **Marinero** | Caminar | 4 |
+| 4 | **Gaviota** | Vuelo | 4 |
+
+### Fase 3: Las Canteras
+Archivo: `assets/spritesheets/enemies_canteras.png`
+
+| Fila | Entidad | Acción | Frames |
+| :--- | :--- | :--- | :--- |
+| 1 | **Cangrejo** | Movimiento | 4 |
+| 2 | **Surfista** | Correr | 4 |
+| 3 | **Pelota** | Rebotar | 4 |
+| 4 | **Medusa** | Flotar | 4 |
 
 ---
 
