@@ -460,7 +460,7 @@
 
             // Spawning
             spawnTimer++;
-            if (spawnTimer > 100 - (gameSpeed * 5)) {
+            if (spawnTimer > 150 - (gameSpeed * 5)) {
                 enemies.push(new Enemy());
                 spawnTimer = 0;
             }
@@ -500,7 +500,7 @@
 
             drawParallaxLayer(l4, 0.05, 0, 'top');
             drawParallaxLayer(l3, 0.2, 50);
-            drawParallaxLayer(l2, 0.5, 150); // Lowered much much more
+            drawParallaxLayer(l2, 0.5, 200); // Lowered even more
             
             drawTiles();
 
