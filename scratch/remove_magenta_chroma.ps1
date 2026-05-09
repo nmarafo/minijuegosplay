@@ -15,14 +15,11 @@ foreach ($file in $files) {
     $width = $original.Width
     $height = $original.Height
     
-    # Create a new bitmap with explicit Alpha channel support
-    $bmp = New-Object System.Drawing.Bitmap($width, $height, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-    for ($y = 0; $y -lt $height; $y++) {
-        for ($x = 0; $x -lt $width; $x++) {
-            $color = $original.GetPixel($x, $y)
-            $bmp.SetPixel($x, $y, $color)
-        }
-    }
+    # Create a new bitmap with Alpha channel
+    $bmp = New-Object System.Drawing.Bitmap($width, $height)
+    $graphics = [System.Drawing.Graphics]::FromImage($bmp)
+    $graphics.DrawImage($original, 0, 0, $width, $height)
+    $graphics.Dispose()
     $original.Dispose()
 
     # Iterate over pixels to remove Magenta-like ones
