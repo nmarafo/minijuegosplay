@@ -26,7 +26,8 @@ Una vez recibida la información, genera una propuesta detallada dividida en al 
 **Reglas de Diseño:**
 *   **Chroma Key**: Instruye al usuario sobre la ubicación del color de 'chroma key' (ej. verde puro #00FF00) para facilitar la transparencia:
     *   **Capa 4**: **SIN CHROMA**. Es la capa base (cielo/fondo absoluto) y debe ocupar el 100% de la imagen.
-    *   **Capas 1, 2 y 3**: El chroma debe situarse en la parte **SUPERIOR** de la imagen.
+    *   **Capas 1 y 3**: El chroma debe situarse en la parte **SUPERIOR** de la imagen.
+    *   **Capa 2**: El chroma debe situarse en la parte **SUPERIOR**, pero debe ocupar una **franja mucho más grande en altura** (ej. 60-70% superior de la imagen vacía con chroma). Esto obliga a que los elementos dibujados queden desplazados hacia la parte muy inferior del lienzo, despejando un área mayor para la jugabilidad.
 *   **Pureza y Bordes Definidos (CRÍTICO)**: Para evitar que el post-procesamiento elimine colores legítimos del arte:
     *   El color de chroma debe ser **100% sólido y plano**, sin degradados ni texturas.
     *   **Sharp Edges**: Instruye al modelo para que **NO** aplique anti-aliasing ni suavizado en los bordes donde el arte toca el chroma. Los bordes deben ser "pixel-perfect" y cortantes.
